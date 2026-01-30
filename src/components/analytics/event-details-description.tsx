@@ -17,7 +17,7 @@ export function EventDetailsDescription() {
 
           {/* Left Column: Event Details */}
           <div className="w-full md:w-1/3 space-y-8">
-            <h2 className="text-2xl font-bold">Event Details</h2>
+            <h2 className="text-2xl font-bold text-foreground">Event Details</h2>
 
             <div className="space-y-6">
               {/* Date & Time */}
@@ -26,7 +26,7 @@ export function EventDetailsDescription() {
                   <Calendar className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Date & Time</h3>
+                  <h3 className="font-semibold text-lg text-foreground">Date & Time</h3>
                   <p className="text-muted-foreground">March 22, 2025; 7:00 PM onwards</p>
                 </div>
               </div>
@@ -37,7 +37,7 @@ export function EventDetailsDescription() {
                   <MapPin className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Location</h3>
+                  <h3 className="font-semibold text-lg text-foreground">Location</h3>
                   <p className="text-muted-foreground">VMRDA Grounds, Visakhapatnam</p>
                 </div>
               </div>
@@ -48,7 +48,7 @@ export function EventDetailsDescription() {
                   <Users className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Organized By</h3>
+                  <h3 className="font-semibold text-lg text-foreground">Organized By</h3>
                   <p className="text-muted-foreground">Moonlight Events</p>
                 </div>
               </div>
@@ -59,7 +59,7 @@ export function EventDetailsDescription() {
                   <Tag className="h-6 w-6 text-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Category</h3>
+                  <h3 className="font-semibold text-lg text-foreground">Category</h3>
                   <p className="text-muted-foreground">Music Concert</p>
                 </div>
               </div>
@@ -69,7 +69,8 @@ export function EventDetailsDescription() {
 
           {/* Right Column: Description */}
           <div className="w-full md:w-2/3 space-y-6">
-            <h2 className="text-2xl font-bold">Description</h2>
+            <h2 className="text-2xl font-bold text-foreground">Description</h2>
+
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
                 A sensational live performance by Maritza Correa, bringing Latin pop and soul to the heart of Vizag. Enjoy an electrifying evening filled with vibrant music, food stalls, light shows, and crowd interaction. This open-air concert is a must-attend for music lovers and cultural enthusiasts.
@@ -86,7 +87,10 @@ export function EventDetailsDescription() {
             </div>
 
             <div className="pt-4">
-              <Button variant="outline" className="rounded-full px-8 border-blue-200 text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+              <Button
+                variant="outline"
+                className="rounded-full px-8 border-border text-primary hover:text-primary hover:bg-muted"
+              >
                 Read More <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

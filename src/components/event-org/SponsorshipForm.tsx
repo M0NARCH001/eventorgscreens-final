@@ -12,6 +12,18 @@ interface SponsorshipFormProps {
     formErrors: { [key: string]: string };
 }
 
+interface SponsorItem {
+    name: string;
+    website: string;
+}
+
+interface SponsorsState {
+    titleSponsors: SponsorItem[];
+    coPartners: SponsorItem[];
+    mediaPartners: SponsorItem[];
+    [key: string]: SponsorItem[];
+}
+
 const SponsorshipForm: React.FC<SponsorshipFormProps> = ({
     formData,
     setFormData,
@@ -34,7 +46,7 @@ const SponsorshipForm: React.FC<SponsorshipFormProps> = ({
 
     const handleAddSponsor = (typeId: string) => {
         setFormData((prev) => {
-            const currentSponsors = prev.sponsors as any; // Cast for easier manipulation of dynamic keys
+            const currentSponsors = prev.sponsors as unknown as SponsorsState; // Cast to specific object type
             return {
                 ...prev,
                 sponsors: {
@@ -47,12 +59,12 @@ const SponsorshipForm: React.FC<SponsorshipFormProps> = ({
 
     const handleRemoveSponsor = (typeId: string, index: number) => {
         setFormData((prev) => {
-            const currentSponsors = prev.sponsors as any;
+            const currentSponsors = prev.sponsors as unknown as SponsorsState;
             return {
                 ...prev,
                 sponsors: {
                     ...currentSponsors,
-                    [typeId]: currentSponsors[typeId].filter((_: any, i: number) => i !== index),
+                    [typeId]: currentSponsors[typeId].filter((_, i) => i !== index),
                 },
             };
         });
@@ -60,7 +72,7 @@ const SponsorshipForm: React.FC<SponsorshipFormProps> = ({
 
     const handleSponsorChange = (typeId: string, index: number, field: string, value: string) => {
         setFormData((prev) => {
-            const currentSponsors = prev.sponsors as any;
+            const currentSponsors = prev.sponsors as unknown as SponsorsState;
             const updatedList = [...(currentSponsors[typeId] || [])];
             if (updatedList[index]) {
                 updatedList[index] = { ...updatedList[index], [field]: value };

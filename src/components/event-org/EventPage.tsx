@@ -1,28 +1,25 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import {
-  ChevronDownIcon,
-  PlusIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
-  BellIcon,
-  SearchIcon,
-  UserCircleIcon,
+  ChevronDownIcon,
   PartyPopperIcon,
 } from "lucide-react";
 import EventForm from './EventForm';
 import TicketingForm from './TicketingForm';
 import SponsorshipForm from './SponsorshipForm';
 import FinalForm from './FinalForm';
-import { validateEventForm, EventFormData } from "./validateEventform";
+import {
+  INITIAL_EVENT_FORM_DATA,
+  STEP_FIELDS,
+  PROGRESS_STEPS,
+  EventFormData
+} from "@/lib/create-event-data";
+import { validateEventForm } from './validateEventform';
 
 // Map each step to the keys it validates
-const stepFields = [
-  ["eventName", "category", "tagline", "description", "personnel", "date", "time", "endTime", "venue", "googleMapsUrl", "transportToEvent", "entrySide"],
-  ["ticketType", "ticketName", "ticketQuantity", "audienceCategory", "refundPolicy", "discountType", "discountAmount", "discountCode", "guidelines", "addOns.giftHampersDescription"],
-  ["contactInfo.mobile", "contactInfo.email", "sponsors.titleSponsors", "sponsors.coPartners", "sponsors.mediaPartners"],
-  ["requirements.artists", "requirements.stallsAvailability", "requirements.stallsPrices", "postEventFollowUp.thankYouNote"]
-];
+const stepFields = STEP_FIELDS;
 
 interface EventPageProps {
   isDashboardMode?: boolean;
@@ -38,83 +35,7 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
       setShowCreateEvent(true);
     }
   }, [startDirectly]);
-  const [formData, setFormData] = useState<EventFormData>({
-    eventName: "",
-    category: "",
-    description: "",
-    tagline: "",
-    eventPhoto: null,
-    personnel: "",
-    date: "",
-    endDate: "",
-    time: "",
-    endTime: "",
-    venue: "",
-    googleMapsUrl: "",
-    artists: [{ name: "", genre: "" }],
-    chefGuests: [{ name: "", specialty: "" }],
-    attractions: [{ name: "", description: "" }],
-    media: "",
-    transportOptions: {
-      publicTransport: false,
-      ownVehicles: false,
-      thirdPartyApp: false,
-      localPrivateTransport: false,
-    },
-    transportToEvent: "",
-    entrySide: "",
-    guidelines: "",
-    idleness: '',
-    ticketName: '',
-    ticketPrice: '',
-    ticketType: 'paid',
-    ticketQuantity: '',
-    discountType: '',
-    discountCode: '',
-    discountAmount: '',
-    type: 'flat', // potential legacy field or duplicate of discountType
-    enableOffers: false,
-    audienceCategory: [{ category: '', price: '', description: '' }],
-    refundPolicy: '',
-    addOns: {
-      freebies: false,
-      giftHampers: false,
-      merchandise: false,
-      addOther: false,
-      giftHampersDescription: '',
-    },
-    audienceRange: { min: 13, max: 86 },
-    targetAudience: {
-      Entrepreneurs: false,
-      'High School Learners': false,
-      'University Scholars': true,
-      Artists: false,
-      Singers: false,
-      'General Public': true,
-    },
-    sponsors: { // Using object structure as preferred in SponsorshipForm
-      titleSponsors: [{ name: '', website: '' }],
-      coPartners: [{ name: '', website: '' }],
-      mediaPartners: [{ name: '', website: '' }],
-    },
-    contactInfo: {
-      mobile: "",
-      email: "",
-      website: "",
-      additionalLinks: "",
-    },
-    requirements: {
-      artists: '',
-      stallsAvailability: '',
-      stallsPrices: [
-        { stallType: '', stallPrice: '' },
-        { stallType: '', stallPrice: '' },
-      ],
-    },
-    postEventFollowUp: {
-      thankYouNote: '',
-    },
-  });
+  const [formData, setFormData] = useState<EventFormData>(INITIAL_EVENT_FORM_DATA);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [photoError, setPhotoError] = useState("");
   const [additionalPhotos, setAdditionalPhotos] = useState<File[]>([]);
@@ -145,12 +66,10 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
     }));
   };
 
-  const progressSteps = [
-    { number: "01", label: "Event Information", active: currentStep >= 1 },
-    { number: "02", label: "Ticketing", active: currentStep >= 2 },
-    { number: "03", label: "Sponsorship", active: currentStep >= 3 },
-    { number: "04", label: "Final", active: currentStep >= 4 },
-  ];
+  const progressSteps = PROGRESS_STEPS.map((step, index) => ({
+    ...step,
+    active: currentStep >= index + 1
+  }));
 
   const formRef = React.useRef<HTMLDivElement>(null);
   const mainContainerRef = React.useRef<HTMLDivElement>(null);
@@ -344,15 +263,16 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
   };
 
   // Generalized helper for robust string path updates (used by handleInputChange and others)
-  const updateNestedState = (prevState: any, path: string[], value: any): any => {
+  const updateNestedState = <T extends object>(prevState: T, path: string[], value: unknown): T => {
     const [head, ...tail] = path;
+    const obj = prevState as Record<string, unknown>;
     if (tail.length === 0) {
-      return { ...prevState, [head]: value };
+      return { ...obj, [head]: value } as unknown as T;
     }
     return {
-      ...prevState,
-      [head]: updateNestedState(prevState[head] || {}, tail, value)
-    };
+      ...obj,
+      [head]: updateNestedState((obj[head] as object) || {}, tail, value)
+    } as unknown as T;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -368,22 +288,30 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
         if (!validTypes.includes(file.type)) {
           setPhotoError("Please upload a JPG, PNG, or GIF file.");
           setPhotoPreview(null);
-          setFormData((prev) => ({ ...prev, eventPhoto: null }));
+          setFormData((prev) => {
+            return { ...prev, eventPhoto: null };
+          });
           return;
         }
         if (file.size > 5 * 1024 * 1024) {
           setPhotoError("File size must be less than 5MB.");
           setPhotoPreview(null);
-          setFormData((prev) => ({ ...prev, eventPhoto: null }));
+          setFormData((prev) => {
+            return { ...prev, eventPhoto: null };
+          });
           return;
         }
         setPhotoError("");
-        setFormData((prev) => ({ ...prev, eventPhoto: file }));
+        setFormData((prev) => {
+          return { ...prev, eventPhoto: file };
+        });
         setPhotoPreview(URL.createObjectURL(file));
       } else {
         setPhotoError("");
         setPhotoPreview(null);
-        setFormData((prev) => ({ ...prev, eventPhoto: null }));
+        setFormData((prev) => {
+          return { ...prev, eventPhoto: null };
+        });
       }
     } else if (name === "additionalPhotos") {
       const filesArray = Array.from(files || []);
@@ -445,7 +373,7 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
     setFormData((prev) => ({
       ...prev,
       [arrayName]: [
-        ...(prev[arrayName as keyof EventFormData] as any[]),
+        ...(prev[arrayName as keyof EventFormData] as Record<string, unknown>[]),
         arrayName === "artists" ? { name: "", genre: "" } :
           arrayName === "chefGuests" ? { name: "", specialty: "" } :
             arrayName === "attractions" ? { name: "", description: "" } :
@@ -458,7 +386,7 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
   const updateArrayField = (arrayName: string, index: number, field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
-      [arrayName]: (prev[arrayName as keyof EventFormData] as any[]).map((item, i) =>
+      [arrayName]: (prev[arrayName as keyof EventFormData] as Record<string, unknown>[]).map((item, i) =>
         i === index ? { ...item, [field]: value } : item
       ),
     }));
@@ -467,41 +395,11 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
   const removeArrayItem = (arrayName: string, index: number) => {
     setFormData((prev) => ({
       ...prev,
-      [arrayName]: ((prev[arrayName as keyof EventFormData] as any[]) || []).filter((_, i) => i !== index),
+      [arrayName]: ((prev[arrayName as keyof EventFormData] as Record<string, unknown>[]) || []).filter((_, i) => i !== index),
     }));
   };
 
-  const addNestedArrayItem = (parentKey: string, arrayKey: string, newItem: any) => {
-    // Only used for FinalForm requirements.stallsPrices potentially if generalized
-    // But FinalForm uses specific logic usually.
-    // Keeping for compatibility.
-    setFormData((prev) => {
-      const parent = prev[parentKey as keyof EventFormData] as any;
-      return {
-        ...prev,
-        [parentKey]: {
-          ...parent,
-          [arrayKey]: [
-            ...(parent?.[arrayKey] || []),
-            newItem,
-          ],
-        },
-      };
-    });
-  };
 
-  const removeNestedArrayItem = (parentKey: string, arrayKey: string, index: number) => {
-    setFormData((prev) => {
-      const parent = prev[parentKey as keyof EventFormData] as any;
-      return {
-        ...prev,
-        [parentKey]: {
-          ...parent,
-          [arrayKey]: (parent?.[arrayKey] || []).filter((_: any, i: number) => i !== index),
-        },
-      };
-    });
-  };
 
   return (
     <div ref={mainContainerRef} style={{
@@ -769,8 +667,7 @@ const EventPage: React.FC<EventPageProps> = ({ isDashboardMode = false, startDir
                     handleInputChange={handleInputChange}
                     // FinalForm uses internal generalized array updates or specific handlers
                     // Passing generalized ones if needed
-                    addArrayItem={addNestedArrayItem as any}
-                    removeArrayItem={removeNestedArrayItem as any}
+
                     formErrors={formErrors}
                   />
                 )}

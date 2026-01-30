@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
@@ -18,6 +18,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import TimePicker from "@/components/ui/TimePicker";
+import { EVENT_CATEGORIES, TRANSPORT_OPTIONS } from "@/lib/create-event-data";
 
 interface EventFormProps {
   formData: EventFormData;
@@ -193,10 +194,11 @@ const EventForm: React.FC<EventFormProps> = ({
                         }}
                       >
                         <option value="">Select the Category</option>
-                        <option value="music">Music</option>
-                        <option value="art">Art</option>
-                        <option value="tech">Tech</option>
-                        <option value="business">Business</option>
+                        {EVENT_CATEGORIES.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
                       </select>
                       <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
                         Category
@@ -544,66 +546,24 @@ const EventForm: React.FC<EventFormProps> = ({
                     Transport Availability
                   </span>
                   <div className="transport-options" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-                    <button
-                      type="button"
-                      onClick={() => handleTransportToggle("publicTransport")}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: "9999px",
-                        fontSize: "12px",
-                        backgroundColor: formData.transportOptions.publicTransport ? "#3b82f6" : "white",
-                        color: formData.transportOptions.publicTransport ? "white" : "#7e7e7e",
-                        border: "1px solid #7e7e7e",
-                        cursor: "pointer"
-                      }}
-                    >
-                      Public Transport
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleTransportToggle("ownVehicles")}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: "9999px",
-                        fontSize: "12px",
-                        backgroundColor: formData.transportOptions.ownVehicles ? "#3b82f6" : "white",
-                        color: formData.transportOptions.ownVehicles ? "white" : "#7e7e7e",
-                        border: "1px solid #7e7e7e",
-                        cursor: "pointer"
-                      }}
-                    >
-                      Own Vehicles
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleTransportToggle("thirdPartyApp")}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: "9999px",
-                        fontSize: "12px",
-                        backgroundColor: formData.transportOptions.thirdPartyApp ? "#3b82f6" : "white",
-                        color: formData.transportOptions.thirdPartyApp ? "white" : "#7e7e7e",
-                        border: "1px solid #7e7e7e",
-                        cursor: "pointer"
-                      }}
-                    >
-                      Third Party App
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleTransportToggle("localPrivateTransport")}
-                      style={{
-                        padding: "8px 16px",
-                        borderRadius: "9999px",
-                        fontSize: "12px",
-                        backgroundColor: formData.transportOptions.localPrivateTransport ? "#3b82f6" : "white",
-                        color: formData.transportOptions.localPrivateTransport ? "white" : "#7e7e7e",
-                        border: "1px solid #7e7e7e",
-                        cursor: "pointer"
-                      }}
-                    >
-                      Local Private Transport
-                    </button>
+                    {TRANSPORT_OPTIONS.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => handleTransportToggle(option.value)}
+                        style={{
+                          padding: "8px 16px",
+                          borderRadius: "9999px",
+                          fontSize: "12px",
+                          backgroundColor: formData.transportOptions[option.value as keyof typeof formData.transportOptions] ? "#3b82f6" : "white",
+                          color: formData.transportOptions[option.value as keyof typeof formData.transportOptions] ? "white" : "#7e7e7e",
+                          border: "1px solid #7e7e7e",
+                          cursor: "pointer"
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>

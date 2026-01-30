@@ -5,20 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChevronDown, Plus } from "lucide-react";
 
-interface HeaderProps {
-    isOpen: boolean; // Sidebar state to adjust padding if needed, though usually handled by layout
-}
 
-const Header: React.FC<HeaderProps> = ({ isOpen }) => {
+
+const Header: React.FC = () => {
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
 
     return (
         <header
-            className="fixed top-0 right-0 z-40 bg-white border-b border-gray-100 h-[64px] flex items-center justify-between md:justify-end px-4 md:px-8 transition-all duration-300 w-full max-w-full left-0 md:w-[calc(100%-80px)] md:left-[80px] overflow-x-hidden"
+            className="fixed top-0 right-0 left-0 z-40 bg-white border-b border-gray-100 h-[64px] flex items-center justify-between md:justify-end px-4 md:px-8 transition-all duration-300"
         >
             {/* Mobile Logo */}
             <div className="md:hidden flex items-center">
-                <Link href="/home">
+                <Link href="/">
                     <Image
                         src="/logo.svg"
                         alt="Baatasari"
@@ -30,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ isOpen }) => {
                 </Link>
             </div>
 
-            <div className="flex items-center gap-3 md:gap-6 flex-shrink-0 ml-auto md:ml-0">
+            <div className="flex items-center gap-3 md:gap-6 shrink-0 ml-auto md:ml-0">
                 {/* Create Event Button */}
                 <Link href="/create-event?mode=create">
                     <button className="flex items-center gap-1 md:gap-2 bg-[#0c1b33] text-white px-3 py-1.5 md:px-5 md:py-2.5 rounded-lg hover:bg-[#0c1b33]/90 transition-colors">

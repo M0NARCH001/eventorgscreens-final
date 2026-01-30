@@ -1,12 +1,11 @@
 "use client";
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
     ChevronDownIcon,
     PlusIcon,
-    MinusIcon,
     TrashIcon,
 } from "lucide-react";
-import { EventFormData } from "./validateEventform";
+import { EventFormData, ADD_ON_OPTIONS, TARGET_AUDIENCE_OPTIONS } from "@/lib/create-event-data";
 
 interface TicketingFormProps {
     formData: EventFormData;
@@ -20,14 +19,7 @@ interface TicketingFormProps {
     formErrors: { [key: string]: string };
 }
 
-// Debounce function
-const debounce = (func: (...args: any[]) => void, wait: number) => {
-    let timeout: NodeJS.Timeout;
-    return (...args: any[]) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
-    };
-};
+
 
 const TicketingForm: React.FC<TicketingFormProps> = ({
     formData,
@@ -39,23 +31,23 @@ const TicketingForm: React.FC<TicketingFormProps> = ({
     toggleSection,
     formErrors = {},
 }) => {
-    // Debounced handleInputChange
+    // Handle input change (removed debounce to fix lag)
     const handleInputChange = useCallback(
-        debounce((name: string, value: any) => {
+        (name: string, value: string | number | boolean) => {
             setFormData((prev) => {
-                const newFormData: any = { ...prev };
+                const newFormData = { ...prev };
                 const nameParts = name.split('.');
-                let current = newFormData;
+                let current = newFormData as unknown as Record<string, unknown>;
                 for (let i = 0; i < nameParts.length - 1; i++) {
                     if (!current[nameParts[i]]) {
                         current[nameParts[i]] = {};
                     }
-                    current = current[nameParts[i]];
+                    current = current[nameParts[i]] as Record<string, unknown>;
                 }
                 current[nameParts[nameParts.length - 1]] = value;
                 return newFormData;
             });
-        }, 200),
+        },
         [setFormData]
     );
 
@@ -107,27 +99,9 @@ const TicketingForm: React.FC<TicketingFormProps> = ({
         [setFormData]
     );
 
-    const addOnOptions = useMemo(
-        () => [
-            { id: 'freebies', label: 'Freebies' },
-            { id: 'giftHampers', label: 'Gift Hampers' },
-            { id: 'merchandise', label: 'Merchandise' },
-            { id: 'addOther', label: 'Add Other' },
-        ],
-        []
-    );
+    const addOnOptions = ADD_ON_OPTIONS;
 
-    const audienceTypes = useMemo(
-        () => [
-            'Entrepreneurs',
-            'High School Learners',
-            'University Scholars',
-            'Artists',
-            'Singers',
-            'General Public',
-        ],
-        []
-    );
+    const audienceTypes = TARGET_AUDIENCE_OPTIONS;
 
     const audienceCategory = formData.audienceCategory || [{ category: '', price: '', description: '' }];
 
@@ -474,7 +448,7 @@ const TicketingForm: React.FC<TicketingFormProps> = ({
                                                     position: 'absolute',
                                                 }}
                                             >
-                                                Refund Policy
+                                                Refund Policy <span style={{ color: 'red' }}>*</span>
                                             </label>
                                             <input
                                                 id="refundPolicy"
@@ -485,7 +459,7 @@ const TicketingForm: React.FC<TicketingFormProps> = ({
                                                     width: '100%',
                                                     height: '48px',
                                                     padding: '12px 16px',
-                                                    border: `1px solid ${formData.refundPolicy ? '#9ca3af' : '#ef4444'}`,
+                                                    border: `1px solid ${formErrors.refundPolicy ? '#ef4444' : 'black'}`,
                                                     borderRadius: '6px',
                                                     fontSize: '14px',
                                                     color: '#1f2937',
@@ -648,7 +622,7 @@ const TicketingForm: React.FC<TicketingFormProps> = ({
                                             <button
                                                 key={option.id}
                                                 type="button"
-                                                onClick={() => handleAddOnChange({ target: { name: `addOns.${option.id}`, checked: !formData.addOns[option.id] } } as any)}
+                                                onClick={() => handleAddOnChange({ target: { name: `addOns.${option.id}`, checked: !formData.addOns[option.id] } })}
                                                 style={{
                                                     padding: "8px 16px",
                                                     borderRadius: "9999px",
@@ -1222,7 +1196,7 @@ const DualThumbSlider: React.FC<DualThumbSliderProps> = ({ min = 0, max = 100, v
 
             if (!trackRef.current) return;
             const rect = trackRef.current.getBoundingClientRect();
-            let percentVal = clamp((clientX - rect.left) / rect.width, 0, 1);
+            const percentVal = clamp((clientX - rect.left) / rect.width, 0, 1);
             let value = Math.round(percentVal * (max - min) + min);
 
             if (thumb === 'min') {

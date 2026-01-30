@@ -32,7 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     const pathname = usePathname();
 
     const menuItems = [
-        { name: "Home", icon: Home, href: "/home" },
+        { name: "Home", icon: Home, href: "/" },
         { name: "Create Events", icon: PlusCircle, href: "/create-event" }, // New route
         { name: "Manage Events", icon: Calendar, href: "/manage-events" },
         { name: "Artist Request", icon: MessageSquare, href: "/artist-request" },
@@ -50,7 +50,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             {/* DESKTOP SIDEBAR */}
             <aside
                 className={classNames(
-                    "hidden md:flex fixed left-0 top-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-50 flex-col shadow-xl",
+                    "hidden md:flex fixed top-0 left-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-50 flex-col shadow-xl",
                     isOpen ? "w-[260px]" : "w-[80px]"
                 )}
             >

@@ -14,12 +14,12 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star, ChevronLeft, ChevronRight } from "lucide-react"
-import { addMonths, subMonths, format, setMonth as setDateMonth, setYear as setDateYear } from "date-fns"
+import { addMonths, subMonths, format } from "date-fns"
+
+import { STALLS_DATA } from "@/lib/stalls-data"
+import { useLocalStorage } from "@/hooks/use-local-storage"
 
 // --- Mock Data ---
-
-// Custom modifiers for the calendar
-// We highlight specific dates with different colors and values
 const highlightedDates = [
     { date: new Date(2025, 0, 10), count: 20, color: "pink" },
     { date: new Date(2025, 0, 13), count: 100, color: "green" },
@@ -31,66 +31,28 @@ const highlightedDates = [
 ]
 
 const reviews = [
-    {
-        id: 1,
-        name: "Riya Mehta",
-        avatar: "/avatars/01.png", // fallback initials RM
-        rating: 5,
-        text: "An unforgettable evening! The organization was flawless — from entry to exit, everything ran smoothly. The sound and lights were just WOW!",
-        time: "18 minutes ago"
-    },
-    {
-        id: 2,
-        name: "Rahul Deshmukh",
-        avatar: "/avatars/02.png", // fallback RD
-        rating: 5,
-        text: "Enjoyed every bit of the music and lights. Slight delays in the schedule, but overall, a fantastic night",
-        time: "18 minutes ago"
-    },
-    {
-        id: 3,
-        name: "Sanya Kapoor",
-        avatar: "/avatars/03.png",
-        rating: 4,
-        text: "Great vibes and amazing performances. The crowd management could have been better though.",
-        time: "2 hours ago"
-    },
-    {
-        id: 4,
-        name: "Amit Patel",
-        avatar: "/avatars/04.png",
-        rating: 5,
-        text: "Absolutely loved it! Can't wait for the next event.",
-        time: "1 day ago"
-    }
+    { id: 1, name: "Riya Mehta", avatar: "/avatars/01.png", rating: 5, text: "Amazing experience!", time: "18 minutes ago" },
+    { id: 2, name: "Rahul Deshmukh", avatar: "/avatars/02.png", rating: 5, text: "Fantastic event", time: "18 minutes ago" },
+    { id: 3, name: "Sanya Kapoor", avatar: "/avatars/03.png", rating: 4, text: "Loved it", time: "2 hours ago" },
+    { id: 4, name: "Amit Patel", avatar: "/avatars/04.png", rating: 5, text: "Superb!", time: "1 day ago" }
 ]
 
 export function DateReviewsSection() {
     const [date, setDate] = React.useState<Date | undefined>(new Date(2025, 0, 10))
-    const [month, setMonth] = React.useState<Date>(new Date(2025, 0, 1)) // Control the view month
-
-    // Helper to get custom data for a date
-    const getCustomData = (day: Date) => {
-        return highlightedDates.find(d =>
-            d.date.getDate() === day.getDate() &&
-            d.date.getMonth() === day.getMonth() &&
-            d.date.getFullYear() === day.getFullYear()
-        )
-    }
-
-
+    const [month, setMonth] = React.useState<Date>(new Date(2025, 0, 1))
 
     return (
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-[400px_1fr] lg:grid-cols-[350px_1fr] md:p-8 p-4">
-            {/* Left Card: Date Change */}
-            {/* Left Card: Date Change */}
+
+            {/* Left Card */}
             <div className="flex flex-col gap-6">
-                <h2 className="text-2xl font-bold text-[#0c1b33]">Date Change</h2>
+                <h2 className="text-2xl font-bold text-primary">
+                    Date Change
+                </h2>
 
+                <div className="border border-border rounded-2xl p-4 md:p-6 bg-background shadow-sm flex flex-col">
 
-                {/* Inner Card Container */}
-                <div className="border border-gray-200 rounded-2xl p-4 md:p-6 bg-white shadow-sm flex flex-col">
-                    {/* Calendar Navigation */}
+                    {/* Header */}
                     <div className="flex items-center justify-between mb-8 px-2">
                         <Button
                             variant="ghost"
@@ -98,22 +60,24 @@ export function DateReviewsSection() {
                             className="h-8 w-8 hover:bg-transparent"
                             onClick={() => setMonth(prev => subMonths(prev, 1))}
                         >
-                            <ChevronLeft className="h-5 w-5 text-gray-600" />
+                            <ChevronLeft className="h-5 w-5 text-muted-foreground" />
                         </Button>
-                        <span className="text-lg text-gray-700 font-normal">
+
+                        <span className="text-lg text-muted-foreground font-normal">
                             {format(month, "yyyy, d MMMM")}
                         </span>
+
                         <Button
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 hover:bg-transparent"
                             onClick={() => setMonth(prev => addMonths(prev, 1))}
                         >
-                            <ChevronRight className="h-5 w-5 text-gray-600" />
+                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
                         </Button>
                     </div>
 
-                    {/* Calendar Grid */}
+                    {/* Calendar */}
                     <Calendar
                         mode="single"
                         month={month}
@@ -127,45 +91,40 @@ export function DateReviewsSection() {
                             caption: "hidden",
                             nav: "hidden",
                             table: "w-full border-collapse",
-                            head_row: "",
                             head_cell: "text-muted-foreground font-normal text-sm p-2 text-center",
-                            row: "",
                             cell: "p-1 text-center relative",
                             day: "p-0 font-normal",
                             day_selected: "bg-transparent text-foreground",
-                            day_today: "bg-gray-50 rounded-xl",
+                            day_today: "bg-muted rounded-xl",
                             day_outside: "text-muted-foreground opacity-50",
                             day_disabled: "text-muted-foreground opacity-50",
-                            day_hidden: "invisible",
                         }}
                         components={{
                             DayButton: (props) => {
-                                const { day, modifiers, className, ...buttonProps } = props;
+                                const { day, modifiers, ...buttonProps } = props;
                                 const dateObj = day.date;
 
-                                // Find custom data
                                 const data = highlightedDates.find(d =>
                                     d.date.getDate() === dateObj.getDate() &&
                                     d.date.getMonth() === dateObj.getMonth() &&
                                     d.date.getFullYear() === dateObj.getFullYear()
                                 )
 
-                                let wrapperClass = "bg-gray-50 text-gray-700 hover:bg-gray-100" // Default
+                                let wrapperClass = "bg-muted text-muted-foreground hover:bg-muted/80"
                                 let countColor = ""
 
                                 if (data) {
-                                    if (data.color === "pink") wrapperClass = "bg-red-50 text-red-600 hover:bg-red-100"
-                                    if (data.color === "green") wrapperClass = "bg-green-50 text-green-600 hover:bg-green-100"
-                                    if (data.color === "yellow") wrapperClass = "bg-yellow-50 text-yellow-600 hover:bg-yellow-100"
+                                    if (data.color === "pink") wrapperClass = "bg-destructive/10 text-destructive hover:bg-destructive/20"
+                                    if (data.color === "green") wrapperClass = "bg-primary/10 text-primary hover:bg-primary/20"
+                                    if (data.color === "yellow") wrapperClass = "bg-accent/20 text-accent-foreground hover:bg-accent/30"
 
-                                    if (data.color === "pink") countColor = "text-red-500"
-                                    if (data.color === "green") countColor = "text-green-500"
-                                    if (data.color === "yellow") countColor = "text-yellow-500"
+                                    if (data.color === "pink") countColor = "text-destructive"
+                                    if (data.color === "green") countColor = "text-primary"
+                                    if (data.color === "yellow") countColor = "text-accent-foreground"
                                 }
 
-                                // Handle selection styling
-                                if (modifiers.selected) {
-                                    if (!data) wrapperClass = "bg-[#0c1b33] text-white hover:bg-[#0c1b33]/90"
+                                if (modifiers.selected && !data) {
+                                    wrapperClass = "bg-primary text-primary-foreground hover:bg-primary/90"
                                 }
 
                                 return (
@@ -173,7 +132,10 @@ export function DateReviewsSection() {
                                         {...buttonProps}
                                         className={`w-10 h-12 sm:w-12 sm:h-14 flex flex-col items-center justify-center rounded-xl transition-all ${wrapperClass}`}
                                     >
-                                        <span className="text-sm font-medium">{dateObj.getDate()}</span>
+                                        <span className="text-sm font-medium">
+                                            {dateObj.getDate()}
+                                        </span>
+
                                         {data && (
                                             <span className={`text-[10px] font-bold leading-none mt-0.5 ${countColor}`}>
                                                 {data.count}
@@ -184,67 +146,81 @@ export function DateReviewsSection() {
                             }
                         }}
                     />
-
                 </div>
             </div>
 
-            {/* Right Card: Customer Reviews */}
-            <Card className="flex flex-col h-[600px]"> {/* Fixed height or as needed */}
+            {/* Reviews */}
+            <Card className="flex flex-col h-[600px]">
                 <CardHeader className="pb-4">
-                    <CardTitle className="text-xl font-bold">Customer Reviews</CardTitle>
+                    <CardTitle className="text-xl font-bold text-foreground">
+                        Customer Reviews
+                    </CardTitle>
                 </CardHeader>
+
                 <CardContent className="flex flex-col h-full overflow-hidden gap-6">
-                    {/* Summary */}
+
+                    {/* Ratings */}
                     <div className="flex items-center gap-6">
                         <div className="flex-1 space-y-2">
                             {[5, 4, 3, 2, 1].map((star) => (
                                 <div key={star} className="flex items-center gap-2">
                                     <span className="text-xs w-6 text-muted-foreground">{star}.0</span>
-                                    <Progress
-                                        value={star === 5 ? 60 : star === 4 ? 50 : star === 3 ? 15 : star === 2 ? 30 : 40}
-                                        className="h-2 [&>div]:bg-yellow-400"
-                                    />
+                                    <Progress value={50} className="h-2 [&>div]:bg-accent" />
                                 </div>
                             ))}
                         </div>
+
                         <div className="flex flex-col items-center justify-center min-w-[100px]">
-                            <span className="text-5xl font-bold">4.0</span>
+                            <span className="text-5xl font-bold text-foreground">4.0</span>
+
                             <div className="flex gap-0.5 my-1">
-                                <Star className="fill-yellow-400 text-yellow-400 h-4 w-4" />
-                                <Star className="fill-yellow-400 text-yellow-400 h-4 w-4" />
-                                <Star className="fill-yellow-400 text-yellow-400 h-4 w-4" />
-                                <Star className="fill-yellow-400 text-yellow-400 h-4 w-4" />
-                                <Star className="text-muted-foreground h-4 w-4" />
+                                {[...Array(5)].map((_, i) => (
+                                    <Star
+                                        key={i}
+                                        className={`h-4 w-4 ${i < 4 ? "fill-accent text-accent" : "text-muted-foreground"}`}
+                                    />
+                                ))}
                             </div>
+
                             <span className="text-xs text-muted-foreground">500 reviews</span>
                         </div>
                     </div>
 
-                    {/* Scrollable Reviews List */}
+                    {/* Review List */}
                     <div className="flex-1 overflow-y-auto pr-4 space-y-4">
                         {reviews.map((review) => (
-                            <div key={review.id} className="rounded-lg border p-4 space-y-2">
+                            <div key={review.id} className="rounded-lg border border-border p-4 space-y-2">
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-center gap-3">
                                         <Avatar className="h-10 w-10">
                                             <AvatarImage src={review.avatar} />
-                                            <AvatarFallback>{review.name.split(" ").map(n => n[0]).join("")}</AvatarFallback>
+                                            <AvatarFallback>
+                                                {review.name.split(" ").map(n => n[0]).join("")}
+                                            </AvatarFallback>
                                         </Avatar>
-                                        <span className="font-semibold text-sm">{review.name}</span>
+
+                                        <span className="font-semibold text-sm text-foreground">
+                                            {review.name}
+                                        </span>
                                     </div>
+
                                     <div className="flex gap-0.5">
                                         {[...Array(5)].map((_, i) => (
                                             <Star
                                                 key={i}
-                                                className={`h-4 w-4 ${i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
+                                                className={`h-4 w-4 ${i < review.rating ? "fill-accent text-accent" : "text-muted-foreground"}`}
                                             />
                                         ))}
                                     </div>
                                 </div>
+
                                 <p className="text-sm text-foreground/80 leading-relaxed">
                                     {review.text}
                                 </p>
-                                <p className="text-xs text-muted-foreground">{review.time}</p>
+
+                                <p className="text-xs text-muted-foreground">
+                                    {review.time}
+                                </p>
                             </div>
                         ))}
                     </div>
