@@ -119,10 +119,10 @@ export default function EventsPage() {
                     <div className="flex-1 transition-all duration-500 ease-in-out">
                         <section>
                             <div className="mb-8 flex flex-col gap-2">
-                                <h1 className="text-3xl font-medium text-(--stall-title-color) font-bricolage">
+                                <h1 className="text-3xl font-medium text-(--upcoming-primary-700) font-bricolage">
                                     Stalls
                                 </h1>
-                                <p className="text-(--stall-subtitle-color) font-albert">
+                                <p className="text-black font-albert">
                                     You can choose the stalls you want to add here.
                                 </p>
                             </div>
@@ -233,10 +233,10 @@ export default function EventsPage() {
                 <div className="bg-background z-1 ">
                     <section>
                         <div className="mb-8 flex flex-col gap-2">
-                            <h2 className="text-3xl font-medium text-(--artist-name-color) font-bricolage">
+                            <h2 className="text-3xl font-medium text-(--upcoming-primary-700) font-bricolage">
                                 Artists
                             </h2>
-                            <p className="text-(--artist-role-color) font-albert">
+                            <p className="text-black font-albert">
                                 You can meet all talented artists here
                             </p>
                         </div>

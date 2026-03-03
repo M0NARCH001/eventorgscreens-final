@@ -30,7 +30,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-2 md:gap-3">
-        <Button className="bg-primary hover:bg-primary/90 text-primary-foreground h-9 px-3 md:px-4">
+        <Button className="bg-primary text-primary-foreground h-9 px-3 md:px-4">
           <span className="text-lg mr-1">+</span> Create Event
         </Button>
 

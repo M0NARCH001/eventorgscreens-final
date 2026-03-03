@@ -40,6 +40,24 @@ export function validateEventForm(formData: Partial<EventFormData>): Record<stri
     if (!formData.discountType || (formData.discountType !== "flat" && formData.discountType !== "percentage")) errors.discountType = "Discount type is required";
     if (!formData.discountAmount || isNaN(Number(formData.discountAmount))) errors.discountAmount = "Discount amount is required";
     if (!formData.discountCode || formData.discountCode.trim() === "") errors.discountCode = "Discount code is required";
+    if (formData.discountType === "percentage") {
+      if (!formData.couponCode || formData.couponCode.trim() === "") errors.couponCode = "Coupon code is required";
+      if (!formData.couponExpiry) {
+        errors.couponExpiry = "Coupon expiry date is required";
+      } else {
+        const expiryDate = new Date(formData.couponExpiry);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (isNaN(expiryDate.getTime())) {
+          errors.couponExpiry = "Enter a valid date";
+        } else if (expiryDate < today) {
+          errors.couponExpiry = "Expiry date must be in the future";
+        }
+      }
+      if (!formData.minOrderValue || isNaN(Number(formData.minOrderValue)) || Number(formData.minOrderValue) < 0) {
+        errors.minOrderValue = "Enter a valid minimum order value";
+      }
+    }
   }
   if (!formData.guidelines || formData.guidelines.trim() === "") errors.guidelines = "Guidelines are required";
   // Add-Ons

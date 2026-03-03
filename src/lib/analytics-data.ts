@@ -30,49 +30,78 @@ export const CANCELLED_CONFIG = {
 
 // --- Revenue Stats Data ---
 
-export const REVENUE_DATA_RAW = [
-    { day: "Mon", revenue: 1500 },
-    { day: "Tue", revenue: 2300 },
-    { day: "Wed", revenue: 3200 }, // Peak 1
-    { day: "Thu", revenue: 1600 },
-    { day: "Fri", revenue: 2500 }, // Peak 2
-    { day: "Sat", revenue: 1200 },
-    { day: "Sun", revenue: 4000 }, // Peak 3
-    { day: "Mon2", revenue: 2800 },
-    { day: "Tue2", revenue: 3800 },
-    { day: "Wed2", revenue: 2000 },
-    { day: "Thu2", revenue: 3500 },
-    { day: "Fri2", revenue: 2300 },
-    { day: "Sat2", revenue: 3000 },
-    { day: "Sun2", revenue: 1000 },
+export const REVENUE_BY_DATE_DATA = [
+    { date: "1 Jun", revenue: 2000, addOns: 200 },
+    { date: "2 Jun", revenue: 3500, addOns: 400 },
+    { date: "3 Jun", revenue: 5000, addOns: 500 },
+    { date: "4 Jun", revenue: 4200, addOns: 450 },
+    { date: "5 Jun", revenue: 8500, addOns: 900 },
+    { date: "6 Jun", revenue: 12000, addOns: 1200 },
+    { date: "7 Jun", revenue: 9000, addOns: 950 },
+    { date: "8 Jun", revenue: 7500, addOns: 800 },
+    { date: "9 Jun", revenue: 10000, addOns: 1100 },
+    { date: "10 Jun", revenue: 13500, addOns: 1400 },
+    { date: "11 Jun", revenue: 11000, addOns: 1200 },
+    { date: "12 Jun", revenue: 9200, addOns: 1000 },
+    { date: "13 Jun", revenue: 7800, addOns: 850 },
+    { date: "14 Jun", revenue: 10500, addOns: 1100 },
+    { date: "15 Jun", revenue: 8000, addOns: 900 },
+    { date: "16 Jun", revenue: 6500, addOns: 700 },
+    { date: "17 Jun", revenue: 9800, addOns: 1050 },
+    { date: "18 Jun", revenue: 7200, addOns: 780 },
+    { date: "19 Jun", revenue: 11500, addOns: 1250 },
+    { date: "20 Jun", revenue: 15000, addOns: 1600 },
+    { date: "21 Jun", revenue: 18500, addOns: 2000 },
+    { date: "22 Jun", revenue: 22000, addOns: 2400 },
+    { date: "23 Jun", revenue: 19000, addOns: 2100 },
+    { date: "24 Jun", revenue: 16500, addOns: 1800 },
+    { date: "25 Jun", revenue: 14000, addOns: 1500 },
 ]
 
-export const WAVE_DATA = [
-    { name: "Mon", value: 400 },
-    { name: "Tue", value: 1000 },
-    { name: "Wed", value: 800 },
-    { name: "Thu", value: 2500 },
-    { name: "Fri", value: 1200 },
-    { name: "Sat", value: 2000 },
-    { name: "Sun", value: 800 },
-    { name: "Mon2", value: 2200 },
-    { name: "Tue2", value: 1100 },
-    { name: "Wed2", value: 2600 },
-    { name: "Thu2", value: 1700 },
-    { name: "Fri2", value: 2400 },
-    { name: "Sat2", value: 1600 },
-    { name: "Sun2", value: 400 },
-    { name: "Mon3", value: 0 },
-].map((item) => ({
-    ...item,
-    value: item.value + 500
-}));
+export const TICKETS_BY_DATE_DATA = [
+    { date: "1 Jun", vip: 2, regular: 8, child: 1, family: 0 },
+    { date: "2 Jun", vip: 3, regular: 12, child: 2, family: 1 },
+    { date: "3 Jun", vip: 5, regular: 18, child: 3, family: 1 },
+    { date: "4 Jun", vip: 4, regular: 14, child: 2, family: 1 },
+    { date: "5 Jun", vip: 7, regular: 28, child: 4, family: 2 },
+    { date: "6 Jun", vip: 10, regular: 38, child: 6, family: 3 },
+    { date: "7 Jun", vip: 8, regular: 30, child: 5, family: 2 },
+    { date: "8 Jun", vip: 6, regular: 24, child: 4, family: 2 },
+    { date: "9 Jun", vip: 9, regular: 32, child: 5, family: 3 },
+    { date: "10 Jun", vip: 12, regular: 42, child: 7, family: 3 },
+    { date: "11 Jun", vip: 10, regular: 36, child: 6, family: 3 },
+    { date: "12 Jun", vip: 8, regular: 28, child: 5, family: 2 },
+    { date: "13 Jun", vip: 7, regular: 22, child: 4, family: 2 },
+    { date: "14 Jun", vip: 9, regular: 34, child: 5, family: 3 },
+    { date: "15 Jun", vip: 7, regular: 26, child: 4, family: 2 },
+    { date: "16 Jun", vip: 5, regular: 20, child: 3, family: 2 },
+    { date: "17 Jun", vip: 8, regular: 30, child: 5, family: 2 },
+    { date: "18 Jun", vip: 6, regular: 22, child: 4, family: 2 },
+    { date: "19 Jun", vip: 10, regular: 36, child: 6, family: 3 },
+    { date: "20 Jun", vip: 13, regular: 48, child: 8, family: 4 },
+    { date: "21 Jun", vip: 16, regular: 58, child: 10, family: 5 },
+    { date: "22 Jun", vip: 19, regular: 68, child: 12, family: 5 },
+    { date: "23 Jun", vip: 15, regular: 56, child: 9, family: 4 },
+    { date: "24 Jun", vip: 12, regular: 46, child: 8, family: 4 },
+    { date: "25 Jun", vip: 10, regular: 38, child: 6, family: 3 },
+]
 
 export const REVENUE_CHART_CONFIG = {
     revenue: {
-        label: "Revenue",
+        label: "Total Revenue",
         color: "hsl(215, 60%, 45%)", // Dark blueish
     },
+    addOns: {
+        label: "Add-Ons Revenue",
+        color: "hsl(142, 60%, 45%)", // Greenish
+    },
+} satisfies ChartConfig
+
+export const TICKETS_CHART_CONFIG = {
+    vip: { label: "VIP", color: "hsl(280, 60%, 65%)" },
+    regular: { label: "Regular", color: "hsl(215, 60%, 45%)" },
+    child: { label: "Child", color: "hsl(340, 60%, 65%)" },
+    family: { label: "Family", color: "hsl(32, 80%, 55%)" },
 } satisfies ChartConfig
 
 export const RADIAL_DATA = [

@@ -11,7 +11,7 @@ export function QuickActions() {
           <Button
             key={index}
             variant="outline"
-            className="w-full h-20 border-2 border-border flex items-center justify-center gap-3 bg-background hover:bg-muted rounded-xl"
+            className="w-full h-20 border-2 border-border flex items-center justify-center gap-3 bg-background rounded-xl"
           >
             <action.icon className="h-5 w-5 text-primary shrink-0" />
             <span className="text-base font-medium text-primary truncate">

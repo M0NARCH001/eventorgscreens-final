@@ -117,20 +117,20 @@ export function ArtistRequestsCarousel() {
                                             </div>
 
                                             <div className="mt-4">
-                                                <div className="border rounded-lg p-3 mb-3">
-                                                    <h2 className="text-lg font-semibold mb-1">
-                                                        Musical Concert
+                                                <div className="border rounded-lg p-3 mb-3 transition-colors">
+                                                    <h2 className="text-lg font-semibold mb-1 text-(--upcoming-primary-700)">
+                                                        {item.title}
                                                     </h2>
-                                                    <p className="text-sm">
+                                                    <p className="text-sm text-black">
                                                         <b>Month:</b> {item.month}
                                                     </p>
-                                                    <p className="text-sm">
+                                                    <p className="text-sm text-black">
                                                         <b>Location:</b> {item.location}
                                                     </p>
                                                 </div>
 
                                                 <div className="bg-linear-to-br from-(--blue-100) to-(--blue-50) rounded-lg p-4 text-center mb-4">
-                                                    <p className="text-3xl font-bold text-(--royal-blue)">
+                                                    <p className="text-3xl font-bold text-blue-soft">
                                                         {item.interest}
                                                     </p>
                                                     <p className="text-sm text-(--gray-600)">
@@ -197,7 +197,7 @@ export function ArtistRequestsCarousel() {
 
                     ${isActive
                                             ? "border-2 border-(--navy-900) shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
-                                            : "border border-(--gray-200) shadow-xl hover:shadow-2xl hover:opacity-80"
+                                            : "border border-(--gray-200) shadow-xl"
                                         }
                   `}
                                 >
@@ -214,11 +214,11 @@ export function ArtistRequestsCarousel() {
 
                                         {!isExpanded && (
                                             <div>
-                                                <h3 className="mt-4 font-semibold text-lg leading-tight">
+                                                <h3 className="mt-4 font-semibold text-lg leading-tight text-(--upcoming-primary-800)">
                                                     {item.title}
                                                 </h3>
-                                                <p className="text-sm text-(--gray-600) mt-1">
-                                                    <span className="font-medium text-(--royal-blue)">
+                                                <p className="text-sm mt-1 text-black">
+                                                    <span className="font-medium text-blue-soft">
                                                         {item.interest}
                                                     </span>{" "}
                                                     People show interest
@@ -243,20 +243,20 @@ export function ArtistRequestsCarousel() {
                                     {isExpanded && (
                                         <div className="p-6 flex flex-col justify-between">
                                             <div>
-                                                <div className="border rounded-xl p-4 mb-4 hover:border-(--royal-blue) hover:shadow-md transition-colors">
-                                                    <h2 className="text-2xl font-semibold mb-2">
-                                                        Musical Concert
+                                                <div className="border rounded-xl p-4 mb-4 transition-colors">
+                                                    <h2 className="text-2xl font-semibold mb-2 text-(--upcoming-primary-800)">
+                                                        {item.title}
                                                     </h2>
-                                                    <p className="text-sm">
+                                                    <p className="text-sm text-black">
                                                         <b>Month:</b> {item.month}
                                                     </p>
-                                                    <p className="text-sm">
+                                                    <p className="text-sm text-black">
                                                         <b>Location:</b> {item.location}
                                                     </p>
                                                 </div>
 
-                                                <div className="bg-linear-to-br from-(--blue-100) to-(--blue-50) rounded-xl p-6 text-center mb-6 hover:shadow-lg transition-shadow">
-                                                    <p className="text-4xl font-bold text-(--royal-blue)">
+                                                <div className="bg-linear-to-br from-(--blue-100) to-(--blue-50) rounded-xl p-6 text-center mb-6 transition-shadow">
+                                                    <p className="text-4xl font-bold text-blue-soft">
                                                         {item.interest}
                                                     </p>
                                                     <p className="text-sm text-(--gray-600) mt-1">
@@ -266,7 +266,7 @@ export function ArtistRequestsCarousel() {
                                             </div>
 
                                             <Button
-                                                className="rounded-full bg-(--navy-900) h-12 hover:bg-(--navy-800) hover:shadow-xl transition-all"
+                                                className="rounded-full bg-(--navy-900) h-12 transition-all"
                                                 onClick={(e) => handleHostEvent(e, item)}
                                             >
                                                 Host the Event

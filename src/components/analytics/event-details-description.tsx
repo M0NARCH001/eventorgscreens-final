@@ -7,12 +7,13 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
 export function EventDetailsDescription() {
+
   return (
     <div className="w-full">
       <Card className="w-full">
         <CardContent className="px-6 py-6 md:px-10 md:py-10 flex flex-col md:flex-row gap-10">
           <div className="w-full md:w-1/3 flex flex-col gap-8">
-            <h2 className="text-2xl font-bold text-foreground">Event Details</h2>
+            <h2 className="text-2xl font-bold text-blue-soft">Event Details</h2>
 
             <div className="flex flex-col gap-6">
               <div className="flex gap-4">
@@ -70,7 +71,7 @@ export function EventDetailsDescription() {
           </div>
 
           <div className="w-full md:w-2/3 flex flex-col gap-6">
-            <h2 className="text-2xl font-bold text-foreground">Description</h2>
+            <h2 className="text-2xl font-bold text-blue-soft">Description</h2>
 
             <div className="flex flex-col gap-4 text-muted-foreground leading-relaxed">
               <p>
@@ -94,9 +95,9 @@ export function EventDetailsDescription() {
             <div className="pt-4">
               <Button
                 variant="outline"
-                className="rounded-full px-8 border-border text-primary hover:text-primary hover:bg-muted"
+                className="bg-(--white) text-(--upcoming-blue-600) rounded-full px-4 py-1 font-poppins font-medium text-sm md:text-base transition-colors"
               >
-                Read More <ArrowRight className="ml-2 h-4 w-4" />
+                Read More 
               </Button>
             </div>
           </div>

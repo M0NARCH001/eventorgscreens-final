@@ -33,7 +33,7 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button className="bg-primary text-primary-foreground">
           <Plus className="mr-2 h-4 w-4" />
           Create Event
         </Button>

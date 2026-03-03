@@ -32,7 +32,7 @@ export function StallCard({
       </div>
 
       <CardContent className="p-3 flex-1">
-        <h3 className="font-medium leading-tight font-albert text-(--stall-title-color)">
+        <h3 className="font-medium leading-tight font-albert text-(--upcoming-primary-800)">
           {title}
         </h3>
         <p className="text-sm font-poppins text-(--stall-category-color)">
@@ -43,7 +43,7 @@ export function StallCard({
       <CardFooter className="p-3 pt-0">
         <Button
           variant="outline"
-          className="w-full rounded-[25px] py-5 bg-transparent font-poppins text-xs font-medium border-[1.5px] border-(--stall-outline-color) text-(--stall-outline-color) hover:bg-(--stall-outline-hover-bg)"
+          className="w-full rounded-[25px] py-5 font-poppins text-xs font-medium border-transparent bg-foreground text-background"
           onClick={(e) => {
             e.stopPropagation();
             onApprove?.();

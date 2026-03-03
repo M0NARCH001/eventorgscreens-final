@@ -15,8 +15,6 @@ import TimePicker from "@/components/ui/TimePicker";
 import { cn } from "@/lib/utils";
 import { EVENT_CATEGORIES, TRANSPORT_OPTIONS } from "@/lib/create-event-data";
 
-import styles from "./EventForm.module.css";
-
 interface EventFormProps {
   formData: EventFormData;
   setFormData: React.Dispatch<React.SetStateAction<EventFormData>>;
@@ -61,108 +59,122 @@ const EventForm: React.FC<EventFormProps> = ({
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
-  // Auto-grow refs
+  // Auto-grow refs and focus state
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const personnelRef = useRef<HTMLTextAreaElement>(null);
+  const [descriptionFocused, setDescriptionFocused] = useState(false);
+  const [personnelFocused, setPersonnelFocused] = useState(false);
 
   useEffect(() => {
     if (descriptionRef.current) {
-      descriptionRef.current.style.height = "auto";
-      descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+      if (descriptionFocused) {
+        descriptionRef.current.style.height = "auto";
+        descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+        descriptionRef.current.style.overflow = "hidden";
+      } else {
+        descriptionRef.current.style.height = "";
+        descriptionRef.current.style.overflow = "auto";
+      }
     }
-  }, [formData.description]);
+  }, [formData.description, descriptionFocused]);
 
   useEffect(() => {
     if (personnelRef.current) {
-      personnelRef.current.style.height = "auto";
-      personnelRef.current.style.height = `${personnelRef.current.scrollHeight}px`;
+      if (personnelFocused) {
+        personnelRef.current.style.height = "auto";
+        personnelRef.current.style.height = `${personnelRef.current.scrollHeight}px`;
+        personnelRef.current.style.overflow = "hidden";
+      } else {
+        personnelRef.current.style.height = "";
+        personnelRef.current.style.overflow = "auto";
+      }
     }
-  }, [formData.personnel]);
+  }, [formData.personnel, personnelFocused]);
 
   const handleTimeUpdate = (field: "time" | "endTime", value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
-    <div className={styles.container}>
+    <div className="flex flex-col items-start gap-8 w-full">
       {/* Event Information Section */}
-      <div className={styles.section}>
-        <div className={styles.sectionInner}>
+      <div className="w-full bg-card rounded-2xl border border-ring mb-8">
+        <div className="w-full bg-card rounded-2xl border border-ring">
           <div
             onClick={() => toggleSection("event-info")}
-            className={styles.sectionHeader}
+            className="px-8 py-[30px] flex items-start justify-between w-full cursor-pointer"
           >
-            <h3 className={styles.sectionTitle}>Event Information</h3>
+            <h3 className="text-2xl font-medium text-upcoming-primary-700">Event Information</h3>
             {openSections["event-info"] ? (
-              <ChevronUpIcon className={styles.chevron} />
+              <ChevronUpIcon className="w-6 h-6" />
             ) : (
-              <ChevronDownIcon className={styles.chevron} />
+              <ChevronDownIcon className="w-6 h-6" />
             )}
           </div>
 
           {openSections["event-info"] && (
-            <div className={styles.sectionBody}>
-              <div className={cn(styles.row, styles.rowGap40, styles.alignStart)}>
+            <div className="px-8 pb-8">
+              <div className="flex w-full flex-wrap gap-10 items-start">
                 {/* Photo */}
-                <div className={styles.photoCol}>
-                  <label htmlFor="eventPhoto" className={styles.photoLabel}>
-                    <div className={styles.photoDrop}>
+                <div className="flex flex-col w-[258px] min-w-[200px] flex-[1_1_258px] max-w-full max-[600px]:w-full max-[600px]:flex-[1_1_100%]">
+                  <label htmlFor="eventPhoto" className="cursor-pointer block w-full">
+                    <div className="flex flex-col h-[388px] min-h-[388px] items-center justify-center gap-[13px] px-6 py-5 bg-background rounded-xl border border-dashed border-gray-400 w-full max-[600px]:h-auto max-[600px]:min-h-[200px]">
                       <input
                         id="eventPhoto"
                         type="file"
                         name="eventPhoto"
                         onChange={handleInputChange}
                         accept="image/jpeg,image/png,image/gif"
-                        className={styles.hiddenInput}
+                        className="hidden"
                       />
 
                       {photoPreview ? (
                         <Image
                           src={photoPreview}
                           alt="Uploaded event photo preview"
-                          className={styles.photoPreview}
+                          className="h-64 w-auto object-contain max-w-full"
                           width={240}
                           height={360}
                           style={{ objectFit: "cover", borderRadius: "8px" }}
                         />
                       ) : (
-                        <div className={styles.uploadPlaceholder}>
-                          <Upload className={styles.uploadIcon} />
-                          <span className={styles.uploadText}>Upload Image</span>
+                        <div className="flex flex-col items-center gap-2">
+                          <Upload className="w-6 h-6 text-gray-900" />
+                          <span className="font-normal text-gray-900 text-lg font-[Inter,Helvetica,sans-serif]">Upload Image</span>
                         </div>
                       )}
                     </div>
                   </label>
 
-                  <div className={styles.photoHelp}>
-                    <p className={styles.photoHelpText}>
+                  <div className="flex flex-col w-full mt-4 gap-[5px]">
+                    <p className="text-sm font-semibold text-gray-900 text-center">
                       Upload a high-quality image for your event
                     </p>
-                    <p className={styles.photoHelpText}>Formats: PNG, JPG, JPEG</p>
-                    <p className={styles.photoHelpText}>Accepted aspect ratio: 2:3 (Portrait)</p>
+                    <p className="text-sm font-semibold text-gray-900 text-center">Formats: PNG, JPG, JPEG</p>
+                    <p className="text-sm font-semibold text-gray-900 text-center">Accepted aspect ratio: 2:3 (Portrait)</p>
                   </div>
                 </div>
 
                 {/* Fields */}
-                <div className={cn(styles.col, styles.flexGrow)} style={{ gap: 20 }}>
-                  <div className={cn(styles.row, styles.rowGap40, styles.alignCenter)}>
-                    <div className={cn(styles.field, styles.fieldFlex1)}>
+                <div className="flex flex-col flex-[1_1_300px] min-w-0" style={{ gap: 20 }}>
+                  <div className="flex w-full flex-wrap gap-10 items-center">
+                    <div className="relative w-full flex-1">
                       <input
-                        className={styles.input}
+                        className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                         placeholder="Enter event title"
                         name="eventName"
                         value={formData.eventName}
                         onChange={handleInputChange}
                       />
-                      <span className={styles.floatingLabel}>Event Name</span>
+                      <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Event Name</span>
                       {formErrors.eventName && (
-                        <span className={styles.error}>{formErrors.eventName}</span>
+                        <span className="text-danger-red text-xs">{formErrors.eventName}</span>
                       )}
                     </div>
 
-                    <div className={cn(styles.field, styles.fieldFlex1)}>
+                    <div className="relative w-full flex-1">
                       <select
-                        className={styles.select}
+                        className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
@@ -174,14 +186,14 @@ const EventForm: React.FC<EventFormProps> = ({
                           </option>
                         ))}
                       </select>
-                      <span className={styles.floatingLabel}>Category</span>
+                      <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Category</span>
                       {formErrors.category && (
-                        <span className={styles.error}>{formErrors.category}</span>
+                        <span className="text-danger-red text-xs">{formErrors.category}</span>
                       )}
                     </div>
                   </div>
 
-                  <div className={styles.field}>
+                  <div className="relative w-full">
                     <textarea
                       ref={(e) => {
                         if (e) {
@@ -189,7 +201,7 @@ const EventForm: React.FC<EventFormProps> = ({
                           e.style.height = `${e.scrollHeight}px`;
                         }
                       }}
-                      className={cn(styles.textarea, styles.textareaSm)}
+                      className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-16 resize-y"
                       placeholder='Write a catchy tagline, e.g., "Unleash Your Inner Techie!"'
                       name="tagline"
                       value={formData.tagline}
@@ -199,39 +211,43 @@ const EventForm: React.FC<EventFormProps> = ({
                         handleInputChange(e);
                       }}
                     />
-                    <span className={styles.floatingLabel}>Tagline</span>
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Tagline</span>
                     {formErrors.tagline && (
-                      <span className={styles.error}>{formErrors.tagline}</span>
+                      <span className="text-danger-red text-xs">{formErrors.tagline}</span>
                     )}
                   </div>
 
-                  <div className={styles.field}>
+                  <div className="relative w-full">
                     <Textarea
                       ref={descriptionRef}
-                      className={cn(styles.textarea, styles.textareaMd, "min-h-[144px] overflow-hidden")}
+                      className={cn("w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-36 resize-y", "min-h-[144px] transition-[height] duration-200")}
                       placeholder="Describe about the event, including purpose and experience"
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
+                      onFocus={() => setDescriptionFocused(true)}
+                      onBlur={() => setDescriptionFocused(false)}
                     />
-                    <span className={styles.floatingLabel}>Description</span>
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Description</span>
                     {formErrors.description && (
-                      <span className={styles.error}>{formErrors.description}</span>
+                      <span className="text-danger-red text-xs">{formErrors.description}</span>
                     )}
                   </div>
 
-                  <div className={styles.field}>
+                  <div className="relative w-full">
                     <Textarea
                       ref={personnelRef}
-                      className={cn(styles.textarea, styles.textareaSm, "min-h-[80px] overflow-hidden")}
+                      className={cn("w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-16 resize-y", "min-h-[80px] transition-[height] duration-200")}
                       placeholder="List speakers, MCs, DJs, or any special hosts"
                       name="personnel"
                       value={formData.personnel}
                       onChange={handleInputChange}
+                      onFocus={() => setPersonnelFocused(true)}
+                      onBlur={() => setPersonnelFocused(false)}
                     />
-                    <span className={styles.floatingLabel}>Customized Personnel</span>
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Customized Personnel</span>
                     {formErrors.personnel && (
-                      <span className={styles.error}>{formErrors.personnel}</span>
+                      <span className="text-danger-red text-xs">{formErrors.personnel}</span>
                     )}
                   </div>
                 </div>
@@ -242,49 +258,49 @@ const EventForm: React.FC<EventFormProps> = ({
       </div>
 
       {/* Date & Time Section */}
-      <div className={styles.section}>
-        <div className={styles.sectionInner}>
+      <div className="w-full bg-card rounded-2xl border border-ring mb-8">
+        <div className="w-full bg-card rounded-2xl border border-ring">
           <div
             onClick={() => toggleSection("date-time")}
-            className={styles.sectionHeader}
+            className="px-8 py-[30px] flex items-start justify-between w-full cursor-pointer"
           >
-            <h3 className={styles.sectionTitle}>Date &amp; Time</h3>
+            <h3 className="text-2xl font-medium text-upcoming-primary-700">Date &amp; Time</h3>
             {openSections["date-time"] ? (
-              <ChevronUpIcon className={styles.chevron} />
+              <ChevronUpIcon className="w-6 h-6" />
             ) : (
-              <ChevronDownIcon className={styles.chevron} />
+              <ChevronDownIcon className="w-6 h-6" />
             )}
           </div>
 
           {openSections["date-time"] && (
-            <div className={styles.sectionBody}>
-              <div className={styles.col} style={{ gap: 24 }}>
+            <div className="px-8 pb-8">
+              <div className="flex flex-col" style={{ gap: 24 }}>
                 {/* Date + start time + end time */}
-                <div className={cn(styles.row, styles.rowGap16, styles.alignStart)}>
+                <div className="flex w-full flex-wrap gap-4 items-start">
                   {/* Date */}
-                  <div className={cn(styles.field, styles.fieldMin150)} style={{ flex: "1 1 200px" }}>
+                  <div className="relative min-w-[150px] flex-[1_1_200px]">
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
                           variant={"outline"}
                           className={cn(
-                            styles.dateButton,
-                            formData.date ? styles.dateButtonActive : styles.dateButtonMuted
+                            "h-14 px-4 py-1 border border-ring rounded text-base bg-transparent w-full justify-start text-left font-normal relative",
+                            formData.date ? "text-gray-800" : "text-muted-foreground"
                           )}
                         >
-                          {formData.date ? (
+                          {formData.date && !isNaN(new Date(formData.date).getTime()) ? (
                             format(new Date(formData.date), "PPP")
                           ) : (
                             <span>Pick a date</span>
                           )}
-                          <CalendarIcon className={styles.calendarIcon} />
+                          <CalendarIcon className="absolute right-4 top-4 w-6 h-6 text-gray-500 opacity-75" />
                         </Button>
                       </PopoverTrigger>
 
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
-                          selected={formData.date ? new Date(formData.date) : undefined}
+                          selected={formData.date && !isNaN(new Date(formData.date).getTime()) ? new Date(formData.date) : undefined}
                           onSelect={(date) => {
                             if (date) {
                               const formatted = format(date, "yyyy-MM-dd");
@@ -298,24 +314,24 @@ const EventForm: React.FC<EventFormProps> = ({
                       </PopoverContent>
                     </Popover>
 
-                    <span className={styles.floatingLabel}>Start Date</span>
-                    {formErrors.date && <span className={styles.error}>{formErrors.date}</span>}
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Start Date</span>
+                    {formErrors.date && <span className="text-danger-red text-xs">{formErrors.date}</span>}
                   </div>
 
                   {/* Start time */}
-                  <div className={cn(styles.field, styles.fieldMin150)} style={{ flex: "1 1 200px" }}>
+                  <div className="relative min-w-[150px] flex-[1_1_200px]">
                     <input
                       type="text"
                       readOnly
-                      className={styles.input}
+                      className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                       value={formData.time || ""}
                       onClick={() => setShowStartTimePicker(true)}
                       placeholder="HH:MM AM/PM"
                       style={{ cursor: "pointer" }}
                     />
-                    <span className={styles.floatingLabel}>Start Time</span>
-                    <ClockIcon className={styles.clockIcon} />
-                    {formErrors.time && <span className={styles.error}>{formErrors.time}</span>}
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Start Time</span>
+                    <ClockIcon className="absolute right-4 top-4 w-6 h-6 text-gray-500 pointer-events-none" />
+                    {formErrors.time && <span className="text-danger-red text-xs">{formErrors.time}</span>}
 
                     {showStartTimePicker && (
                       <TimePicker
@@ -327,20 +343,20 @@ const EventForm: React.FC<EventFormProps> = ({
                   </div>
 
                   {/* End time */}
-                  <div className={cn(styles.field, styles.fieldMin150)} style={{ flex: "1 1 200px" }}>
+                  <div className="relative min-w-[150px] flex-[1_1_200px]">
                     <input
                       type="text"
                       readOnly
-                      className={styles.input}
+                      className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                       value={formData.endTime || ""}
                       onClick={() => setShowEndTimePicker(true)}
                       placeholder="HH:MM AM/PM"
                       style={{ cursor: "pointer" }}
                     />
-                    <span className={styles.floatingLabel}>End Time</span>
-                    <ClockIcon className={styles.clockIcon} />
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">End Time</span>
+                    <ClockIcon className="absolute right-4 top-4 w-6 h-6 text-gray-500 pointer-events-none" />
                     {formErrors.endTime && (
-                      <span className={styles.error}>{formErrors.endTime}</span>
+                      <span className="text-danger-red text-xs">{formErrors.endTime}</span>
                     )}
 
                     {showEndTimePicker && (
@@ -353,76 +369,76 @@ const EventForm: React.FC<EventFormProps> = ({
                   </div>
                 </div>
 
-                <div className={styles.break24} />
+                <div className="h-6" />
 
                 {/* Venue + Maps */}
-                <div className={cn(styles.row, styles.rowGap40, styles.alignStart)}>
-                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
+                <div className="flex w-full flex-wrap gap-10 items-start">
+                  <div className="relative min-w-[250px] flex-[1_1_250px]">
                     <input
-                      className={styles.input}
+                      className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                       placeholder="Enter the full address or venue name"
                       name="venue"
                       value={formData.venue}
                       onChange={handleInputChange}
                     />
-                    <span className={styles.floatingLabel}>Venue</span>
-                    {formErrors.venue && <span className={styles.error}>{formErrors.venue}</span>}
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Venue</span>
+                    {formErrors.venue && <span className="text-danger-red text-xs">{formErrors.venue}</span>}
                   </div>
 
-                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
+                  <div className="relative min-w-[250px] flex-[1_1_250px]">
                     <input
-                      className={styles.input}
+                      className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                       placeholder="Enter the Google Maps link of the venue"
                       name="googleMapsUrl"
                       value={formData.googleMapsUrl}
                       onChange={handleInputChange}
                     />
-                    <span className={styles.floatingLabel}>Google Maps URL</span>
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Google Maps URL</span>
                     {formErrors.googleMapsUrl && (
-                      <span className={styles.error}>{formErrors.googleMapsUrl}</span>
+                      <span className="text-danger-red text-xs">{formErrors.googleMapsUrl}</span>
                     )}
                   </div>
                 </div>
 
-                <div className={styles.break24} />
+                <div className="h-6" />
 
                 {/* Transport to Event + Entry Side */}
-                <div className={cn(styles.row, styles.rowGap40, styles.alignStart)}>
-                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
+                <div className="flex w-full flex-wrap gap-10 items-start">
+                  <div className="relative min-w-[250px] flex-[1_1_250px]">
                     <input
-                      className={styles.input}
+                      className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                       placeholder="Describe how to reach the event"
                       name="transportToEvent"
                       value={formData.transportToEvent || ""}
                       onChange={handleInputChange}
                     />
-                    <span className={styles.floatingLabel}>Transport to Event</span>
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Transport to Event</span>
                     {formErrors.transportToEvent && (
-                      <span className={styles.error}>{formErrors.transportToEvent}</span>
+                      <span className="text-danger-red text-xs">{formErrors.transportToEvent}</span>
                     )}
                   </div>
 
-                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
+                  <div className="relative min-w-[250px] flex-[1_1_250px]">
                     <input
-                      className={styles.input}
+                      className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                       placeholder="Enter Entry Side details"
                       name="entrySide"
                       value={formData.entrySide || ""}
                       onChange={handleInputChange}
                     />
-                    <span className={styles.floatingLabel}>Entry Side</span>
+                    <span className="absolute -top-3 -left-1 px-1 bg-card text-muted-foreground text-sm z-10">Entry Side</span>
                     {formErrors.entrySide && (
-                      <span className={styles.error}>{formErrors.entrySide}</span>
+                      <span className="text-danger-red text-xs">{formErrors.entrySide}</span>
                     )}
                   </div>
                 </div>
 
-                <div className={styles.break24} />
+                <div className="h-6" />
 
                 {/* Transport Availability */}
                 <div>
-                  <span className={styles.transportLabel}>Transport Availability</span>
-                  <div className={styles.transportOptions}>
+                  <span className="text-muted-foreground text-sm mb-2 block font-semibold">Transport Availability</span>
+                  <div className="flex gap-4 flex-wrap">
                     {TRANSPORT_OPTIONS.map((option) => {
                       const active =
                         formData.transportOptions[
@@ -434,7 +450,10 @@ const EventForm: React.FC<EventFormProps> = ({
                           key={option.value}
                           type="button"
                           onClick={() => handleTransportToggle(option.value)}
-                          className={cn(styles.chip, active && styles.chipActive)}
+                          className={cn(
+                            "px-4 py-2 rounded-full text-xs bg-background text-muted-foreground border border-ring cursor-pointer",
+                            active && "bg-blue-soft text-background"
+                          )}
                         >
                           {option.label}
                         </button>
@@ -449,33 +468,33 @@ const EventForm: React.FC<EventFormProps> = ({
       </div>
 
       {/* Event Highlights Section */}
-      <div className={styles.section}>
-        <div className={styles.sectionInner}>
+      <div className="w-full bg-card rounded-2xl border border-ring mb-8">
+        <div className="w-full bg-card rounded-2xl border border-ring">
           <div
             onClick={() => toggleSection("event-highlights")}
-            className={styles.sectionHeader}
+            className="px-8 py-[30px] flex items-start justify-between w-full cursor-pointer"
           >
-            <h3 className={styles.sectionTitle}>Event Highlights</h3>
+            <h3 className="text-2xl font-medium text-upcoming-primary-700">Event Highlights</h3>
             {openSections["event-highlights"] ? (
-              <ChevronUpIcon className={styles.chevron} />
+              <ChevronUpIcon className="w-6 h-6" />
             ) : (
-              <ChevronDownIcon className={styles.chevron} />
+              <ChevronDownIcon className="w-6 h-6" />
             )}
           </div>
 
           {openSections["event-highlights"] && (
-            <div className={styles.sectionBody}>
-              <div className={styles.col} style={{ gap: 24 }}>
+            <div className="px-8 pb-8">
+              <div className="flex flex-col" style={{ gap: 24 }}>
                 <div style={{ width: "100%" }}>
                   <span style={{ color: "var(--gray-500)", fontSize: 14, marginBottom: 8, display: "block" }}>
                     Add Any Artists Attending the Event
                   </span>
 
                   {formData.artists.map((artist, index) => (
-                    <div key={index} className={styles.artistRow}>
+                    <div key={index} className="flex items-start gap-4 mb-3">
                       <div style={{ flex: 1 }}>
                         <input
-                          className={styles.input}
+                          className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                           placeholder="Artist Name"
                           value={artist.name}
                           onChange={(e) =>
@@ -486,7 +505,7 @@ const EventForm: React.FC<EventFormProps> = ({
 
                       <div style={{ flex: 1 }}>
                         <input
-                          className={styles.input}
+                          className="w-full border border-ring rounded px-4 py-1 text-base text-gray-800 bg-background box-border h-14"
                           placeholder="Genre of Artist"
                           value={artist.genre}
                           onChange={(e) =>

@@ -17,7 +17,7 @@ export function ApprovedStallsSection() {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-xl font-bold text-foreground">
+                <CardTitle className="text-xl font-bold text-blue-soft">
                     Approved Stalls
                 </CardTitle>
             </CardHeader>
@@ -34,9 +34,8 @@ export function ApprovedStallsSection() {
                                     src={stall.image || "/placeholder.svg"}
                                     alt={stall.title}
                                     fill
-                                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                                    className="object-cover transition-transform duration-300"
                                 />
-
                                 <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">
                                     Approved
                                 </div>

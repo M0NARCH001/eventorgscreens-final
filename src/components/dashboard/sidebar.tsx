@@ -30,7 +30,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed left-0 top-0 bottom-0 z-50 w-60 bg-sidebar border-r border-sidebar-border
+        className={`fixed left-0 top-0 bottom-0 z-50 w-60 bg-sidebar border-r border-sidebar-border border-b-2 border-b-white
         transform transition-transform duration-300 flex flex-col
         ${collapsed ? "-translate-x-full" : "translate-x-0"} md:translate-x-0`}
       >

@@ -21,7 +21,6 @@ import {
 } from "@/lib/create-event-data";
 
 import { validateEventForm } from "./validateEventform";
-import styles from "./EventPage.module.css";
 
 const stepFields = STEP_FIELDS;
 
@@ -50,7 +49,7 @@ function getScrollContainer(
   return window;
 }
 
-// Calculate absolute scrollTop target in the container’s coordinate system
+// Calculate absolute scrollTop target in the container's coordinate system
 function getTargetScrollTop(container: HTMLElement | Window, target: HTMLElement, offset = 0) {
   if (container === window) {
     const y = target.getBoundingClientRect().top + window.scrollY - offset;
@@ -102,7 +101,16 @@ const EventPage: React.FC<EventPageProps> = ({
   startDirectly = false,
   action = null,
 }) => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState<number>(() => {
+    if (typeof window !== "undefined") {
+      const savedStep = localStorage.getItem("eventFormCurrentStep");
+      if (savedStep) {
+        const parsed = parseInt(savedStep, 10);
+        if (!isNaN(parsed) && parsed >= 1 && parsed <= 4) return parsed;
+      }
+    }
+    return 1;
+  });
   const [showCreateEvent, setShowCreateEvent] = useState(startDirectly);
 
   useEffect(() => {
@@ -150,7 +158,6 @@ const EventPage: React.FC<EventPageProps> = ({
   // Load saved state
   useEffect(() => {
     const savedData = localStorage.getItem("eventFormData");
-    const savedStep = localStorage.getItem("eventFormCurrentStep");
     const savedSections = localStorage.getItem("eventFormOpenSections");
 
     if (savedData) {
@@ -163,14 +170,12 @@ const EventPage: React.FC<EventPageProps> = ({
           parsedData.endTime = "";
         }
         setFormData((prev) => ({ ...prev, ...parsedData }));
-      } catch { }
-    }
 
-    if (savedStep) {
-      const parsedStep = parseInt(savedStep, 10);
-      if (!isNaN(parsedStep) && parsedStep >= 1 && parsedStep <= 4) {
-        setCurrentStep(parsedStep);
-      }
+        // Auto-resume: if we have draft data, skip the "Get Started" screen
+        if (!startDirectly) {
+          setShowCreateEvent(true);
+        }
+      } catch { }
     }
 
     if (savedSections) {
@@ -178,7 +183,7 @@ const EventPage: React.FC<EventPageProps> = ({
         setOpenSections(JSON.parse(savedSections));
       } catch { }
     }
-  }, []);
+  }, [action, startDirectly]);
 
   // Persist form data (debounced)
   useEffect(() => {
@@ -240,6 +245,11 @@ const EventPage: React.FC<EventPageProps> = ({
         setTimeout(scrollToFormTop, 0);
         return;
       }
+
+      // Clear draft on successful submission
+      localStorage.removeItem("eventFormData");
+      localStorage.removeItem("eventFormCurrentStep");
+      localStorage.removeItem("eventFormOpenSections");
 
       alert("Form Submitted (Simulated)");
       console.log(formData);
@@ -369,7 +379,7 @@ const EventPage: React.FC<EventPageProps> = ({
             : arrayName === "attractions"
               ? { name: "", description: "" }
               : arrayName === "audienceCategory"
-                ? { category: "", price: "", description: "" }
+                ? { category: "", numberOfTickets: "", price: "", description: "" }
                 : { name: "", logo: null, details: "" },
       ],
     }));
@@ -396,21 +406,26 @@ const EventPage: React.FC<EventPageProps> = ({
   return (
     <div
       ref={mainContainerRef}
-      className={[
-        styles.page,
-        isDashboardMode ? styles.pageDashboard : styles.pageStandalone,
-      ].join(" ")}
+      className={`flex flex-col w-full bg-background ${isDashboardMode
+          ? "h-auto overflow-y-visible bg-transparent!"
+          : "h-screen overflow-y-auto"
+        }`}
     >
-      <div className={styles.pageBody}>
-        <section className={[styles.shell, isDashboardMode ? styles.shellDashboard : ""].join(" ")}>
-          <div className={styles.headerBlock}>
+      <div className="grow">
+        <section
+          className={`flex flex-col items-center gap-[52px] w-full bg-background min-h-screen ${isDashboardMode ? "bg-transparent! min-h-0!" : ""
+            }`}
+        >
+          <div className="flex flex-col items-start gap-[52px] w-full">
             {!startDirectly && (
-              <section className={styles.heroSection}>
-                <h1 className={styles.heroTitle}>Promote Your Event with Baatasari</h1>
+              <section className="flex flex-col items-start justify-center gap-6 py-[60px] px-[100px] w-full bg-background max-xl:py-10 max-xl:px-[4vw] max-[700px]:py-6 max-[700px]:px-[2vw] max-[700px]:min-h-0 max-[480px]:py-4 max-[480px]:px-2">
+                <h1 className="font-semibold text-upcoming-primary-700 text-[52px] leading-[62.4px] m-0 font-[Poppins,Helvetica,sans-serif] max-[900px]:text-[32px] max-[900px]:leading-10 max-[700px]:text-[22px] max-[700px]:leading-7 max-[480px]:text-[32px] max-[480px]:leading-[1.2]">
+                  Promote Your Event with Baatasari
+                </h1>
 
-                <div className={styles.heroFlex}>
-                  <div className={styles.heroLeft}>
-                    <p className={styles.heroP1}>
+                <div className="flex items-center gap-6 w-full max-xl:flex-col max-xl:gap-8 max-[900px]:flex-col max-[900px]:gap-6">
+                  <div className="flex flex-col items-start gap-10 flex-1 min-w-[280px] max-xl:w-full max-xl:max-w-[100vw]">
+                    <p className="w-full max-w-[608px] font-medium text-gray-600 text-lg leading-normal m-0 font-[Poppins,Helvetica,sans-serif] max-[480px]:text-[15px] max-[480px]:leading-normal max-[480px]:max-w-full">
                       Are you an event planner eager to highlight amazing talent? Look no further than
                       Baatasari — the perfect blend of creativity and opportunity!
                       <br />
@@ -419,7 +434,7 @@ const EventPage: React.FC<EventPageProps> = ({
                       audiences.
                     </p>
 
-                    <p className={styles.heroP2}>
+                    <p className="font-medium text-foreground text-base leading-6 m-0 font-[Outfit,Helvetica,sans-serif] max-[480px]:text-[15px] max-[480px]:leading-normal">
                       Become part of our dynamic community and let your event shine at thrilling
                       gatherings, live shows, and tailored showcases.
                       <br />
@@ -428,18 +443,19 @@ const EventPage: React.FC<EventPageProps> = ({
                       spotlight. Let&apos;s create something extraordinary!
                     </p>
 
-                    <a href="#create" onClick={handleGetStarted} className={styles.getStartedBtn}>
-                      <span className={styles.getStartedText}>Get Started</span>
-                      <ChevronDownIcon className={styles.getStartedIcon} />
+                    <a href="#create" onClick={handleGetStarted} className="inline-flex items-center justify-center gap-4 py-3 px-8 bg-upcoming-primary-900 rounded-[30px] text-white cursor-pointer border-none no-underline">
+                      <span className="font-medium text-base leading-normal font-[Poppins,Helvetica,sans-serif]">Get Started</span>
+                      <ChevronDownIcon className="w-6 h-6" />
                     </a>
                   </div>
 
-                  <div className={styles.heroImageContainer}>
-                    <div className={styles.heroImagePlaceholder} style={{ position: "relative", background: "transparent", padding: 0 }}>
+                  <div className="flex items-start justify-center px-8 pb-[50px] flex-1 min-w-[280px] max-xl:w-full max-xl:max-w-[100vw] max-[480px]:hidden">
+                    <div className="w-full max-w-[399px] h-[400px] rounded-[20px] flex items-center justify-center flex-col" style={{ position: "relative", background: "transparent", padding: 0 }}>
                       <Image
                         src="/event_hero_landing.png"
                         alt="Event celebration with crowd and stage"
                         fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
                         style={{ objectFit: "cover", borderRadius: "20px" }}
                         priority
                       />
@@ -451,21 +467,26 @@ const EventPage: React.FC<EventPageProps> = ({
           </div>
 
           {showCreateEvent && (
-            <div id="create" ref={formRef} className={styles.formContainer} aria-hidden={!showCreateEvent}>
-              <div className={styles.formHeaderBlock}>
-                <div className={styles.formHeaderRow}>
-                  <h2 className={styles.formTitle}>Create Event</h2>
+            <div
+              id="create"
+              ref={formRef}
+              className="flex flex-col w-full max-w-[1240px] items-center gap-[72px] p-[30px_16px] rounded-[20px] bg-card min-h-[800px] scroll-mt-[100px] max-[900px]:p-[16px_4vw] max-[900px]:rounded-xl max-[900px]:gap-8 max-[768px]:pt-6 max-[700px]:p-[8px_2vw] max-[700px]:rounded-lg max-[700px]:gap-[18px] max-[480px]:p-[16px_12px] max-[480px]:gap-6 max-[480px]:rounded-lg max-[480px]:min-h-0"
+              aria-hidden={!showCreateEvent}
+            >
+              <div className="flex flex-col items-center gap-8 w-full">
+                <div className="flex items-center justify-between w-full">
+                  <h2 className="text-[28px] font-bold text-foreground m-0">Create Event</h2>
                 </div>
 
-                <div className={styles.mobileProgressHeader}>
-                  <h3 className={styles.mobileStepTitle}>{progressSteps[currentStep - 1]?.label}</h3>
-                  <div className={styles.mobileStepMeta}>
+                <div className="hidden max-[768px]:flex max-[768px]:flex-col max-[768px]:items-center text-center mb-6 w-full">
+                  <h3 className="text-xl font-bold text-upcoming-primary-900 m-0">{progressSteps[currentStep - 1]?.label}</h3>
+                  <div className="text-xs text-gray-500 mt-1">
                     Step {currentStep} of {progressSteps.length}
                   </div>
                 </div>
 
                 <div
-                  className={styles.desktopProgressBar}
+                  className="relative w-full max-w-[1000px] h-[70px] flex items-start justify-between max-[900px]:max-w-[98vw] max-[900px]:h-14 max-[768px]:hidden"
                   role="progressbar"
                   aria-label={`Event creation progress, step ${currentStep} of 4`}
                 >
@@ -476,7 +497,7 @@ const EventPage: React.FC<EventPageProps> = ({
                     return (
                       <React.Fragment key={step.number}>
                         <div
-                          className={styles.stepItem}
+                          className="flex flex-col items-center min-w-[80px] z-2 cursor-pointer"
                           onClick={() => {
                             setCurrentStep(Number(step.number));
                             setTimeout(scrollToFormTop, 0);
@@ -491,11 +512,13 @@ const EventPage: React.FC<EventPageProps> = ({
                           }}
                         >
                           <div
-                            className={[
-                              styles.stepCircle,
-                              active ? styles.stepCircleActive : "",
-                              done ? styles.stepCircleDone : "",
-                            ].join(" ")}
+                            className={`w-[34px] h-[34px] rounded-full flex items-center justify-center border-2 border-upcoming-primary-800 bg-gray-100 text-upcoming-primary-800 transition-all duration-200 ${active
+                                ? "border-upcoming-primary-900! bg-card! text-upcoming-primary-900!"
+                                : ""
+                              } ${done
+                                ? "border-upcoming-primary-900! bg-upcoming-primary-900! text-white!"
+                                : ""
+                              }`}
                           >
                             {done ? (
                               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -512,13 +535,19 @@ const EventPage: React.FC<EventPageProps> = ({
                             )}
                           </div>
 
-                          <span className={[styles.stepLabel, active ? styles.stepLabelActive : ""].join(" ")}>
+                          <span
+                            className={`mt-3 text-center text-base text-upcoming-primary-800 max-w-[100px] wrap-break-word ${active ? "text-upcoming-primary-900!" : ""
+                              }`}
+                          >
                             {step.label}
                           </span>
                         </div>
 
                         {index < progressSteps.length - 1 && (
-                          <div className={[styles.connector, done ? styles.connectorDone : ""].join(" ")} />
+                          <div
+                            className={`flex-1 h-1 bg-upcoming-primary-800 min-w-6 max-w-full z-1 mt-[15px] ${done ? "bg-upcoming-primary-900!" : ""
+                              }`}
+                          />
                         )}
                       </React.Fragment>
                     );
@@ -526,7 +555,7 @@ const EventPage: React.FC<EventPageProps> = ({
                 </div>
               </div>
 
-              <div className={styles.formStage}>
+              <div className="w-full">
                 {currentStep === 1 && (
                   <EventForm
                     formData={formData}
@@ -591,18 +620,24 @@ const EventPage: React.FC<EventPageProps> = ({
       </div>
 
       {showCreateEvent && (
-        <div className={styles.navOuter}>
-          <div className={styles.navInner}>
+        <div className="flex justify-center py-2 px-[7%] bg-background">
+          <div className="flex justify-between w-full max-w-[800px] mt-8 pb-[100px] max-[480px]:pb-20">
             <button
               onClick={handlePrevious}
               disabled={currentStep === 1}
-              className={[styles.prevBtn, currentStep === 1 ? styles.prevBtnDisabled : ""].join(" ")}
+              className={`flex items-center gap-2 py-3 px-6 rounded-full border border-border bg-background text-gray-700 cursor-pointer text-base font-medium ${currentStep === 1
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed invisible"
+                  : ""
+                }`}
             >
               <ArrowLeftIcon size={20} />
               Previous
             </button>
 
-            <button onClick={handleNext} className={styles.nextBtn}>
+            <button
+              onClick={handleNext}
+              className="flex items-center gap-2 py-3 px-8 rounded-full bg-upcoming-primary-900 text-white border-none cursor-pointer text-base font-medium shadow-[0_4px_6px_-1px_rgb(0_0_0/0.1),0_2px_4px_-1px_rgb(0_0_0/0.06)]"
+            >
               {currentStep === 4 ? "Submit" : "Proceed"}
               {currentStep !== 4 && <ArrowRightIcon size={20} />}
             </button>

@@ -32,7 +32,7 @@ const Header: React.FC = () => {
       <div className="flex items-center gap-3 md:gap-6 shrink-0 ml-auto md:ml-0">
         {/* Create Event Button */}
         <Link href="/create-event?mode=create">
-          <button className="flex items-center gap-1 md:gap-2 bg-(--brand-navy) text-white px-3 py-1.5 md:px-5 md:py-2.5 rounded-lg hover:bg-(--brand-navy)/90 transition-colors">
+          <button className="flex items-center gap-1 md:gap-2 bg-(--brand-navy) text-white px-3 py-1.5 md:px-5 md:py-2.5 rounded-full transition-colors">
             <Plus className="w-4 h-4 md:w-5 md:h-5" />
             <span className="font-poppins font-medium text-xs md:text-sm">
               Create Event
@@ -43,7 +43,7 @@ const Header: React.FC = () => {
         {/* User Profile dropdown (shadcn) */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="group flex items-center gap-3 border border-gray-200 rounded-full pl-1 pr-3 py-1 cursor-pointer hover:bg-gray-50 transition-colors">
+            <button className="group flex items-center gap-3 border border-gray-200 rounded-full pl-1 pr-3 py-1 cursor-pointer transition-colors">
               <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
                 <Image
                   src="/placeholder-user.jpg"

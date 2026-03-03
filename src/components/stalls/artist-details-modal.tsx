@@ -50,7 +50,7 @@ export function ArtistDetailsModal({
                     {/* Right Side - Content */}
                     <div className="flex-1 p-6 md:p-8 flex flex-col justify-center">
                         <DialogHeader className="mb-4 text-left">
-                            <DialogTitle className="text-3xl font-bold font-bricolage text-slate-900 mb-1">
+                            <DialogTitle className="text-3xl font-bold font-bricolage text-(--upcoming-primary-800) mb-1">
                                 {artist.name}
                             </DialogTitle>
                             <div className="text-lg font-medium text-slate-600 font-poppins">
@@ -77,13 +77,13 @@ export function ArtistDetailsModal({
                             </DialogDescription>
 
                             <div className="flex gap-4 pt-2">
-                                <Button variant="outline" className="flex-1 h-12 rounded-full border-2 border-slate-900 text-slate-900 font-medium text-base hover:bg-slate-50 relative group overflow-hidden">
+                                <Button variant="outline" className="flex-1 h-12 rounded-full border-2 border-slate-900 text-slate-900 font-medium text-base relative group overflow-hidden">
                                     <div className="flex items-center justify-center gap-2 w-full">
                                         <Phone className="h-5 w-5" />
                                         <span className="font-poppins">{artist.phone || "9173865514"}</span>
                                     </div>
                                 </Button>
-                                <Button variant="outline" className="flex-1 h-12 rounded-full border-2 border-slate-900 text-slate-900 font-medium text-base hover:bg-slate-50 relative group overflow-hidden">
+                                <Button variant="outline" className="flex-1 h-12 rounded-full border-2 border-slate-900 text-slate-900 font-medium text-base relative group overflow-hidden">
                                     <div className="flex items-center justify-center gap-2 w-full">
                                         <Mail className="h-5 w-5" />
                                         <span className="font-poppins">{artist.email || "baatasari.com"}</span>

@@ -14,10 +14,10 @@ export default function Home() {
     <DashboardLayout>
       <div className="w-full flex flex-col gap-6">
         <div className="w-full flex flex-col gap-1">
-          <h1 className="text-3xl font-bold text-[--upcoming-primary-700]">
+          <h1 className="text-3xl font-bold text-(--upcoming-primary-700)">
             Hello {name}!
           </h1>
-          <p className="text-[--upcoming-primary-700]">{description}</p>
+          <p className="text-black">{description}</p>
         </div>
 
         <StatsGrid />

@@ -48,10 +48,10 @@ export function EventOverview() {
   const [eventData] = useState<AnalyticsEventData>(getInitialEventData)
 
   return (
-    <div className="w-full px-4 md:px-8 py-4 md:py-8">
+    <div className="w-full px-4 md:px-8 pb-4 md:pb-8 pt-0">
       <div className="w-full flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="w-full flex flex-col gap-6">
-          <h1 className="text-2xl lg:text-4xl font-bold text-foreground">
+          <h1 className="text-2xl lg:text-4xl font-bold text-(--upcoming-primary-700)">
             {eventData.eventName}
           </h1>
 
@@ -100,7 +100,7 @@ export function EventOverview() {
           </div>
         </div>
 
-        <Button className="gap-2 self-start lg:self-auto">
+        <Button className="gap-2 self-start lg:self-auto rounded-full bg-blue-soft text-white">
           <Pencil className="h-4 w-4" />
           Edit Event
         </Button>

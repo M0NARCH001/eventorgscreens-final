@@ -82,7 +82,7 @@ export function UpcomingEventsSection() {
 
   return (
     <Card
-      className="mb-8 hover:shadow-md transition-shadow cursor-pointer bg-[(--upcoming-white)]"
+      className="mb-8 transition-shadow cursor-pointer bg-[(--upcoming-white)]"
       onClick={() => handleEventClick(UPCOMING_EVENTS_LIST[currentSlide])}
     >
       <CardHeader className="p-4 sm:p-6 pb-0 flex flex-row items-center justify-between">
@@ -95,7 +95,7 @@ export function UpcomingEventsSection() {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 rounded-full border-slate-300 hover:bg-slate-100"
+            className="h-8 w-8 rounded-full border-slate-300"
             onClick={goToPrev}
           >
             <ChevronLeft className="h-4 w-4" />
@@ -111,7 +111,7 @@ export function UpcomingEventsSection() {
                 }}
                 className={`rounded-full transition-all duration-300 ${index === currentSlide
                   ? "w-6 h-2.5 bg-slate-800"
-                  : "w-2.5 h-2.5 bg-slate-300 hover:bg-slate-400"
+                  : "w-2.5 h-2.5 bg-slate-300"
                   }`}
               />
             ))}
@@ -120,7 +120,7 @@ export function UpcomingEventsSection() {
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 rounded-full border-slate-300 hover:bg-slate-100"
+            className="h-8 w-8 rounded-full border-slate-300"
             onClick={goToNext}
           >
             <ChevronRight className="h-4 w-4" />
@@ -225,7 +225,7 @@ export function UpcomingEventsSection() {
                         <AlertDialogTrigger asChild>
                           <Button
                             variant="outline"
-                            className="rounded-full text-xs sm:text-sm px-2 sm:px-4 py-2 border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive whitespace-nowrap flex-1 sm:flex-none"
+                            className="rounded-full text-xs sm:text-sm px-2 sm:px-4 py-2 border-destructive text-destructive whitespace-nowrap flex-1 sm:flex-none"
                             onClick={(e) => {
                               e.stopPropagation();
                             }}
@@ -252,14 +252,14 @@ export function UpcomingEventsSection() {
 
                       <Button
                         variant="outline"
-                        className="rounded-full text-xs sm:text-sm px-2 sm:px-4 py-2 border-foreground text-foreground hover:bg-foreground/10 whitespace-nowrap flex-1 sm:flex-none"
+                        className="rounded-full text-xs sm:text-sm px-2 sm:px-4 py-2 border-foreground text-blue-soft whitespace-nowrap flex-1 sm:flex-none"
                         onClick={(e) => handleReschedule(event, e)}
                       >
                         Reschedule
                       </Button>
 
                       <Button
-                        className="rounded-full text-xs sm:text-sm px-2 sm:px-4 py-2 bg-foreground text-background hover:bg-foreground hover:opacity-90 whitespace-nowrap flex-1 sm:flex-none"
+                        className="rounded-full text-xs sm:text-sm px-2 sm:px-4 py-2 bg-foreground text-background whitespace-nowrap flex-1 sm:flex-none"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleEventClick(event);

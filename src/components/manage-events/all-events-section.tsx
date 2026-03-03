@@ -77,7 +77,7 @@ export function AllEventsSection() {
   return (
     <section className="rounded-xl border overflow-hidden bg-(--events-white)">
       {/* Header */}
-      <div className="px-4 sm:px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-(--events-bg-primary)">
+      <div className="px-4 sm:px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between bg-(--upcoming-primary-700)">
         <h3 className="text-(--events-white) font-medium text-lg">
           All Events
         </h3>
@@ -90,12 +90,12 @@ export function AllEventsSection() {
             />
             <Input
               placeholder="Search Events"
-              className="pl-9 h-10 w-full sm:w-56 bg-(--events-bg-primary) text-(--events-white) placeholder:text-(--events-white)/70 border border-(--events-white)/40"
+              className="pl-9 h-10 w-full sm:w-56 bg-(--upcoming-primary-700) text-(--events-white) placeholder:text-(--events-white)/70 border border-(--events-white)/40"
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <Button className="h-10 bg-(--events-white) text-(--events-bg-primary)">
+            <Button className="h-10 bg-(--events-white) text-(--upcoming-primary-700)">
               <Calendar size={16} className="mr-2" />
               Calendar
             </Button>
@@ -146,7 +146,7 @@ export function AllEventsSection() {
             {events.map((event, idx) => (
               <TableRow
                 key={idx}
-                className="border-b border-(--events-gray-200) hover:bg-(--events-gray-50) cursor-pointer transition-colors"
+                className="border-b border-(--events-gray-200) cursor-pointer transition-colors"
                 onClick={() => handleRowClick(event)}
               >
                 <TableCell className="px-6 py-4 text-sm text-(--events-gray-700)">
@@ -181,9 +181,7 @@ export function AllEventsSection() {
                     onClick={(e) => handleAction(event, e)}
                     className={cn(
                       "text-(--events-white) px-6 rounded-full",
-                      event.action === "Repeat"
-                        ? "bg-(--events-blue-900) hover:bg-(--events-blue-800)"
-                        : "bg-(--events-gray-900) hover:bg-(--events-gray-800)"
+                      "bg-blue-soft"
                     )}
                   >
                     {event.action}
@@ -216,7 +214,7 @@ export function AllEventsSection() {
               "px-3 py-1 rounded border text-sm font-medium",
               currentPage === 1
                 ? "border-(--events-gray-400) bg-(--events-gray-100)"
-                : "border-(--events-gray-300) bg-(--events-white) hover:bg-(--events-gray-100)"
+                : "border-(--bg-blue-soft) bg-(--events-white)"
             )}
           >
             1
@@ -229,7 +227,7 @@ export function AllEventsSection() {
               "px-3 py-1 rounded border text-sm font-medium",
               currentPage === 2
                 ? "border-(--events-gray-400) bg-(--events-gray-100)"
-                : "border-(--events-gray-300) bg-(--events-white) hover:bg-(--events-gray-100)"
+                : "border-(--events-gray-300) bg-(--events-white)"
             )}
           >
             2
@@ -240,7 +238,9 @@ export function AllEventsSection() {
           variant="outline"
           size="sm"
           onClick={() => setCurrentPage(Math.min(2, currentPage + 1))}
-          disabled={currentPage === 2}
+          disabled={currentPage === 2
+
+          }
           className="flex items-center gap-2"
         >
           Next

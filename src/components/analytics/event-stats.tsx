@@ -73,14 +73,21 @@ export function EventStats() {
     <div className="w-full">
       <div className="w-full grid gap-6 grid-cols-1 md:grid-cols-3">
         <Card className="flex flex-col">
-          <CardHeader className="items-center pb-2 text-center">
+          <CardHeader className="items-start pb-2">
             <CardTitle className="text-lg font-medium text-foreground">
-              Registered Participants
+              Total number of tickets ➔ {375 + 25}
             </CardTitle>
           </CardHeader>
 
-          <CardContent className="flex flex-1 flex-col items-center justify-center">
-            <div className="mb-4 flex justify-between w-full px-4 text-sm">
+          <CardContent className="flex flex-1 flex-col justify-center">
+            {/* Swapped: Registered Participants title */}
+            <div className="mb-4 w-full">
+              <span className="text-sm font-semibold text-muted-foreground mr-2">
+                Registered Participants
+              </span>
+            </div>
+
+            <div className="mb-4 flex justify-between w-full text-sm">
               <div>
                 <span className="text-xs font-semibold uppercase text-muted-foreground">
                   Registered
@@ -96,30 +103,16 @@ export function EventStats() {
               </div>
             </div>
 
-            <ChartContainer config={REGISTERED_CONFIG} className="h-[50px] w-full">
-              <BarChart
-                data={REGISTERED_DATA}
-                layout="vertical"
-                margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
-                barSize={32}
-              >
-                <XAxis type="number" hide />
-                <YAxis type="category" dataKey="category" hide />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar
-                  dataKey="registered"
-                  stackId="a"
-                  fill="var(--color-chart-1)"
-                  radius={[20, 0, 0, 20]}
-                />
-                <Bar
-                  dataKey="available"
-                  stackId="a"
-                  fill="var(--color-chart-2)"
-                  radius={[0, 20, 20, 0]}
-                />
-              </BarChart>
-            </ChartContainer>
+            <div className="flex gap-2 w-full">
+              <div
+                className="h-4 rounded-full"
+                style={{ backgroundColor: "#7c83db", flex: 375 }}
+              />
+              <div
+                className="h-4 rounded-full"
+                style={{ backgroundColor: "#a3e635", flex: 25 }}
+              />
+            </div>
           </CardContent>
         </Card>
 
@@ -153,13 +146,13 @@ export function EventStats() {
 
             <div className="flex justify-center gap-4 pt-4 text-sm font-medium text-muted-foreground">
               <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded bg-chart-1"></span> Male
+                <span className="h-2 w-2 rounded" style={{ backgroundColor: "hsl(210, 90%, 75%)" }}></span> Male
               </div>
               <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded bg-chart-2"></span> Female
+                <span className="h-2 w-2 rounded" style={{ backgroundColor: "hsl(340, 80%, 75%)" }}></span> Female
               </div>
               <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded bg-muted"></span> Other
+                <span className="h-2 w-2 rounded" style={{ backgroundColor: "hsl(0, 0%, 75%)" }}></span> Other
               </div>
             </div>
           </CardContent>

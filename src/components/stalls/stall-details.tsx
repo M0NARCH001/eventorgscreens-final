@@ -19,12 +19,12 @@ export function StallDetails({ title, subtitle, items = [], onClose, onApprove, 
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute right-4 top-4 h-8 w-8 hover:bg-transparent text-(--stall-close-icon) hover:text-(--stall-close-hover)"
+                    className="absolute right-4 top-4 h-8 w-8 text-(--stall-close-icon)"
                     onClick={onClose}
                 >
                     <X className="h-5 w-5" />
                 </Button>
-                <h2 className="text-[28px] leading-tight font-bold font-bricolage mb-2 pr-6 text-(--stall-title-color)">
+                <h2 className="text-[28px] leading-tight font-bold font-bricolage mb-2 pr-6 text-(--upcoming-primary-800)">
                     {title}
                 </h2>
                 <p className="text-sm font-poppins text-(--stall-subtitle-color)">{subtitle}</p>
@@ -52,6 +52,7 @@ export function StallDetails({ title, subtitle, items = [], onClose, onApprove, 
             <div className="p-4 pt-0 shrink-0 bg-(--stall-details-bg)">
                 <div className="flex gap-4">
                     <Button
+                        variant="outline"
                         onClick={() => {
                             if (isApproved) {
                                 onRevoke?.()
@@ -59,13 +60,13 @@ export function StallDetails({ title, subtitle, items = [], onClose, onApprove, 
                                 onRevoke?.()
                             }
                         }}
-                        className="flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm border-none shadow-none text-(--stall-deny-text) bg-(--stall-deny-bg) hover:bg-(--stall-deny-hover-bg)"
+                        className="flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm border-[1.5px] border-destructive shadow-none text-destructive bg-transparent"
                     >
                         Deny
                     </Button>
                     <Button
                         onClick={onApprove}
-                        className="flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm shadow-none text-white bg-(--stall-approve-bg) hover:bg-(--stall-approve-hover-bg)"
+                        className="flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm shadow-none text-background bg-foreground"
                     >
                         Accept
                     </Button>

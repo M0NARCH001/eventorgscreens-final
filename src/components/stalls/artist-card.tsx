@@ -33,7 +33,7 @@ export function ArtistCard({
         <>
             {/* Simplified Card — just image + name + role */}
             <Card
-                className="bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow h-full flex flex-col cursor-pointer overflow-hidden"
+                className="bg-white border border-gray-100 rounded-2xl shadow-sm transition-shadow h-full flex flex-col cursor-pointer overflow-hidden"
                 onClick={() => setShowDetail(true)}
             >
                 <div className="relative aspect-3/4 w-full bg-slate-100 rounded-t-2xl overflow-hidden">
@@ -45,7 +45,7 @@ export function ArtistCard({
                     />
                 </div>
                 <div className="p-4">
-                    <h4 className="text-base font-bold font-bricolage text-gray-900 leading-tight">
+                    <h4 className="text-base font-bold font-bricolage text-(--upcoming-primary-800) leading-tight">
                         {name}
                     </h4>
                     <p className="text-sm font-medium font-poppins text-gray-500 mt-0.5">
@@ -67,7 +67,7 @@ export function ArtistCard({
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                            className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full bg-white/80"
                             onClick={() => setShowDetail(false)}
                         >
                             <X className="h-4 w-4" />
@@ -84,7 +84,7 @@ export function ArtistCard({
                                 />
                             </div>
                             <div className="flex flex-col gap-2 pt-1">
-                                <h3 className="text-2xl font-bold font-bricolage text-gray-900">
+                                <h3 className="text-2xl font-bold font-bricolage text-(--upcoming-primary-800)">
                                     {name}
                                 </h3>
                                 <p className="text-base font-medium font-poppins text-gray-500">
@@ -110,7 +110,7 @@ export function ArtistCard({
                         <div className="px-6 pb-6 flex gap-3">
                             <Button
                                 variant="outline"
-                                className="flex-1 h-12 rounded-full border-2 border-gray-800 text-gray-900 font-semibold text-sm hover:bg-gray-50"
+                                className="flex-1 h-12 rounded-full border-2 border-gray-800 text-gray-900 font-semibold text-sm"
                                 asChild
                             >
                                 <a href={`tel:${phone}`}>
@@ -120,7 +120,7 @@ export function ArtistCard({
                             </Button>
                             <Button
                                 variant="outline"
-                                className="flex-1 h-12 rounded-full border-2 border-gray-800 text-gray-900 font-semibold text-sm hover:bg-gray-50"
+                                className="flex-1 h-12 rounded-full border-2 border-gray-800 text-gray-900 font-semibold text-sm"
                                 asChild
                             >
                                 <a href={`mailto:${email}`}>

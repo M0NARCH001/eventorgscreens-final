@@ -14,7 +14,7 @@ export interface EventFormData {
     transportToEvent: string;
     entrySide: string;
     ticketType: string;
-    audienceCategory: { category: string; price: string; description: string }[];
+    audienceCategory: { category: string; numberOfTickets: string; price: string; description: string }[];
     refundPolicy: string;
     ticketName: string;
     ticketQuantity: string;
@@ -22,6 +22,9 @@ export interface EventFormData {
     discountType: string;
     discountAmount: string;
     discountCode: string;
+    couponCode: string;
+    couponExpiry: string;
+    minOrderValue: string;
     guidelines: string;
     addOns: {
         freebies: boolean;
@@ -106,10 +109,13 @@ export const INITIAL_EVENT_FORM_DATA: EventFormData = {
     ticketQuantity: '',
     discountType: '',
     discountCode: '',
+    couponCode: '',
+    couponExpiry: '',
+    minOrderValue: '',
     discountAmount: '',
     type: 'flat',
     enableOffers: false,
-    audienceCategory: [{ category: '', price: '', description: '' }],
+    audienceCategory: [{ category: '', numberOfTickets: '', price: '', description: '' }],
     refundPolicy: '',
     addOns: {
         freebies: false,

@@ -90,13 +90,15 @@ export function AnalyticsChart() {
     <Card className="w-full">
       <CardContent className="p-6">
         <div className="analytics-header">
-          <h2 className="analytics-title">Insights & Analytics</h2>
+          <h2 className="analytics-title ">Insights & Analytics</h2>
 
           <div className="analytics-controls">
             <Button
               variant={metric === "tickets" ? "default" : "outline"}
               size="sm"
-              className={`btn-pill-sm ${metric === "tickets" ? "btn-pill-active" : "btn-pill-inactive"
+              className={`rounded-full px-4 h-8 transition-colors border ${metric === "tickets"
+                ? "bg-blue-soft text-white border-blue-soft"
+                : "bg-transparent text-blue-soft border-foreground"
                 }`}
               onClick={() => setMetric("tickets")}
             >
@@ -106,7 +108,9 @@ export function AnalyticsChart() {
             <Button
               variant={metric === "revenue" ? "default" : "outline"}
               size="sm"
-              className={`btn-pill-sm ${metric === "revenue" ? "btn-pill-active" : "btn-pill-inactive"
+              className={`rounded-full px-4 h-8 transition-colors border ${metric === "revenue"
+                ? "bg-blue-soft text-white border-blue-soft"
+                : "bg-transparent text-blue-soft border-foreground"
                 }`}
               onClick={() => setMetric("revenue")}
             >
@@ -141,7 +145,7 @@ export function AnalyticsChart() {
 
         <div className="chart-wrapper">
           <div className="chart-area">
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={280}>
               <LineChart
                 data={data}
                 margin={{ top: 20, right: 30, left: 30, bottom: 20 }}

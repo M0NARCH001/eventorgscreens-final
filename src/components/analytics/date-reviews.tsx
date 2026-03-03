@@ -113,15 +113,14 @@ export function DateReviewsSection() {
     <div className="grid grid-cols-1 gap-8 xl:grid-cols-[520px_1fr] lg:grid-cols-[480px_1fr] w-full">
       {/* Left Card */}
       <div className="flex flex-col gap-6 h-full">
-        <h2 className="text-2xl font-bold text-primary">Date Change</h2>
-
         <div className="border border-border rounded-2xl p-6 md:p-8 bg-background shadow-sm flex flex-col overflow-hidden flex-1">
           {/* Header */}
+          <h2 className="text-2xl font-bold text-blue-soft mb-6 px-2">Date Change</h2>
           <div className="flex items-center justify-between mb-6 px-2">
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 hover:bg-transparent"
+              className="h-8 w-8"
               onClick={() => setMonth((prev) => subMonths(prev, 1))}
             >
               <ChevronLeft className="h-5 w-5 text-gray-600" />
@@ -134,7 +133,7 @@ export function DateReviewsSection() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 hover:bg-transparent"
+              className="h-8 w-8"
               onClick={() => setMonth((prev) => addMonths(prev, 1))}
             >
               <ChevronRight className="h-5 w-5 text-gray-600" />
@@ -174,22 +173,22 @@ export function DateReviewsSection() {
                 const data = highlightedDates.find((d) => isSameDay(d.date, dateObj))
 
                 // Default styles (light gray box, black text) like Day 1, 2, 4 etc.
-                let wrapperClass = "bg-gray-50 text-gray-900 hover:bg-gray-100"
+                let wrapperClass = "bg-gray-50 text-gray-900"
                 const countColor = "text-[#10b981]" // Small numbers are always green in the image
 
                 if (data) {
                   if (data.color === "pink") {
-                    wrapperClass = "bg-[#fee2e2] text-gray-900 hover:bg-[#ffcfcf]"
+                    wrapperClass = "bg-[#fee2e2] text-gray-900"
                   } else if (data.color === "green") {
-                    wrapperClass = "bg-[#dcfce7] text-gray-900 hover:bg-[#bbf7d0]"
+                    wrapperClass = "bg-[#dcfce7] text-gray-900"
                   } else if (data.color === "yellow") {
-                    wrapperClass = "bg-[#fef9c3] text-gray-900 hover:bg-[#fef08a]"
+                    wrapperClass = "bg-[#fef9c3] text-gray-900"
                   }
                 }
 
                 // Selected day (e.g. Day 3) has white background and border
                 if (modifiers.selected && !data) {
-                  wrapperClass = "border border-gray-300 bg-white text-gray-900 hover:bg-gray-50"
+                  wrapperClass = "border border-gray-300 bg-white text-gray-900"
                 }
 
                 return (
@@ -216,11 +215,11 @@ export function DateReviewsSection() {
       </div>
 
       {/* Reviews */}
-      <div className="relative w-full mt-14 lg:mt-0 lg:h-full">
-        <div className="lg:absolute lg:inset-x-0 lg:bottom-0 lg:top-14 flex flex-col w-full h-[480px] lg:h-auto">
+      <div className="relative w-full mt-6 lg:mt-0 lg:h-full">
+        <div className="lg:absolute lg:inset-x-0 lg:bottom-0 lg:top-0 flex flex-col w-full h-[480px] lg:h-auto">
           <Card className="flex flex-col h-full overflow-hidden">
             <CardHeader className="pb-4">
-              <CardTitle className="text-xl font-bold text-foreground">
+              <CardTitle className="text-xl font-bold text-blue-soft">
                 Customer Reviews
               </CardTitle>
             </CardHeader>
