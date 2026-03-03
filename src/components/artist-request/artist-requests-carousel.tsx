@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation"
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 
-import { ARTIST_REQUESTS, ArtistRequest } from "@/lib/artist-request-data"
+import { ARTIST_REQUESTS, type ArtistRequest } from "@/lib/artist-request-data"
+
+const STORAGE_KEY = "eventFormData"
 
 export function ArtistRequestsCarousel() {
     const router = useRouter()
@@ -42,12 +44,14 @@ export function ArtistRequestsCarousel() {
             contactInfo: { mobile: "", email: "", website: "", additionalLinks: "" },
         }
 
-        localStorage.setItem("eventFormData", JSON.stringify(formData))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formData))
         router.push("/create-event?startDirectly=true")
     }
 
     const navigate = (direction: "left" | "right") => {
         if (isAnimating) return
+        if (totalCards <= 1) return
+
         setIsAnimating(true)
         setHovered(false)
 
@@ -63,6 +67,7 @@ export function ArtistRequestsCarousel() {
 
     const handleTouchStart = (e: React.TouchEvent) => {
         touchStartX.current = e.touches[0].clientX
+        touchEndX.current = e.touches[0].clientX
     }
 
     const handleTouchMove = (e: React.TouchEvent) => {
@@ -72,6 +77,7 @@ export function ArtistRequestsCarousel() {
     const handleTouchEnd = () => {
         const diff = touchStartX.current - touchEndX.current
         const minSwipeDistance = 50
+
         if (Math.abs(diff) > minSwipeDistance) {
             navigate(diff > 0 ? "right" : "left")
         }
@@ -84,8 +90,7 @@ export function ArtistRequestsCarousel() {
 
     return (
         <div className="w-full">
-            <div className="max-w-[1440px] mx-auto py-4 px-0 lg:px-6 lg:py-12">
-
+            <div className="w-full max-w-screen-2xl mx-auto py-4 px-0 lg:px-6 lg:py-12">
                 {/* MOBILE */}
                 <div
                     className="block lg:hidden"
@@ -100,33 +105,46 @@ export function ArtistRequestsCarousel() {
                         >
                             {ARTIST_REQUESTS.map((item, index) => (
                                 <div key={index} className="w-full shrink-0 px-2">
-                                    <div className="rounded-2xl bg-white border-2 border-[var(--navy-900)] shadow-2xl">
+                                    <div className="rounded-2xl bg-white border-2 border-(--navy-900) shadow-2xl">
                                         <div className="p-4">
-
                                             <div className="relative w-full h-[320px] rounded-xl overflow-hidden">
-                                                <Image src={item.image} alt={item.title} fill className="object-cover" />
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.title}
+                                                    fill
+                                                    className="object-cover"
+                                                />
                                             </div>
 
                                             <div className="mt-4">
                                                 <div className="border rounded-lg p-3 mb-3">
-                                                    <h2 className="text-lg font-semibold mb-1">Musical Concert</h2>
-                                                    <p className="text-sm"><b>Month:</b> {item.month}</p>
-                                                    <p className="text-sm"><b>Location:</b> {item.location}</p>
+                                                    <h2 className="text-lg font-semibold mb-1">
+                                                        Musical Concert
+                                                    </h2>
+                                                    <p className="text-sm">
+                                                        <b>Month:</b> {item.month}
+                                                    </p>
+                                                    <p className="text-sm">
+                                                        <b>Location:</b> {item.location}
+                                                    </p>
                                                 </div>
 
-                                                <div className="bg-linear-to-br from-[var(--blue-100)] to-[var(--blue-50)] rounded-lg p-4 text-center mb-4">
-                                                    <p className="text-3xl font-bold text-[var(--royal-blue)]">{item.interest}</p>
-                                                    <p className="text-sm text-[var(--gray-600)]">Interest So Far</p>
+                                                <div className="bg-linear-to-br from-(--blue-100) to-(--blue-50) rounded-lg p-4 text-center mb-4">
+                                                    <p className="text-3xl font-bold text-(--royal-blue)">
+                                                        {item.interest}
+                                                    </p>
+                                                    <p className="text-sm text-(--gray-600)">
+                                                        Interest So Far
+                                                    </p>
                                                 </div>
 
                                                 <Button
-                                                    className="w-full rounded-full bg-[var(--navy-900)] h-11"
+                                                    className="w-full rounded-full bg-(--navy-900) h-11"
                                                     onClick={(e) => handleHostEvent(e, item)}
                                                 >
                                                     Host the Event
                                                 </Button>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -134,14 +152,13 @@ export function ArtistRequestsCarousel() {
                         </div>
                     </div>
 
-                    {/* dots */}
                     <div className="flex justify-center gap-2 mt-4">
                         {ARTIST_REQUESTS.map((_, i) => (
                             <div
                                 key={i}
                                 className={`h-1.5 rounded-full transition-all ${i === activeIndex
-                                    ? "bg-[var(--navy-900)] w-6"
-                                    : "bg-[var(--gray-300)] w-1.5"
+                                    ? "bg-(--navy-900) w-6"
+                                    : "bg-(--gray-300) w-1.5"
                                     }`}
                             />
                         ))}
@@ -164,7 +181,8 @@ export function ArtistRequestsCarousel() {
                                     onMouseEnter={() => isActive && setHovered(true)}
                                     onMouseLeave={() => setHovered(false)}
                                     style={{
-                                        transform: `translateX(${position * 400}px) scale(${isActive ? 1 : 0.85})`,
+                                        transform: `translateX(${position * 400}px) scale(${isActive ? 1 : 0.85
+                                            })`,
                                         zIndex: isActive ? 30 : 20,
                                         opacity: isActive ? 1 : 0.6,
                                     }}
@@ -178,65 +196,77 @@ export function ArtistRequestsCarousel() {
                                         }
 
                     ${isActive
-                                            ? "border-2 border-[var(--navy-900)] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
-                                            : "border border-[var(--gray-200)] shadow-xl hover:shadow-2xl hover:opacity-80"
+                                            ? "border-2 border-(--navy-900) shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
+                                            : "border border-(--gray-200) shadow-xl hover:shadow-2xl hover:opacity-80"
                                         }
                   `}
                                 >
-                                    {/* LEFT */}
                                     <div className="p-4">
                                         <div className="relative w-full h-[360px] rounded-xl overflow-hidden bg-gray-50">
                                             <Image
                                                 src={item.image}
                                                 alt={item.title}
                                                 fill
-                                                className={`object-cover transition-transform duration-1000 ease-out ${isActive && hovered ? "scale-110" : "scale-100"}`}
+                                                className={`object-cover transition-transform duration-1000 ease-out ${isActive && hovered ? "scale-110" : "scale-100"
+                                                    }`}
                                             />
                                         </div>
 
                                         {!isExpanded && (
                                             <div>
-                                                <h3 className="mt-4 font-semibold text-lg leading-tight">{item.title}</h3>
-                                                <p className="text-sm text-[var(--gray-600)] mt-1">
-                                                    <span className="font-medium text-[var(--royal-blue)]">{item.interest}</span> People show interest
+                                                <h3 className="mt-4 font-semibold text-lg leading-tight">
+                                                    {item.title}
+                                                </h3>
+                                                <p className="text-sm text-(--gray-600) mt-1">
+                                                    <span className="font-medium text-(--royal-blue)">
+                                                        {item.interest}
+                                                    </span>{" "}
+                                                    People show interest
                                                 </p>
 
-                                                <span className={`inline-block mt-3 text-xs px-4 py-1.5 rounded-full 
-                          ${item.tag === "Popular"
-                                                        ? "bg-[var(--green-100)] text-[var(--green-700)]"
-                                                        : item.tag === "Trending"
-                                                            ? "bg-[var(--orange-100)] text-[var(--orange-700)]"
-                                                            : "bg-[var(--purple-soft-bg)] text-[var(--purple-soft-text)]"
-                                                    }
-                        `}>
+                                                <span
+                                                    className={`inline-block mt-3 text-xs px-4 py-1.5 rounded-full 
+                            ${item.tag === "Popular"
+                                                            ? "bg-(--green-100) text-(--green-700)"
+                                                            : item.tag === "Trending"
+                                                                ? "bg-(--orange-100) text-(--orange-700)"
+                                                                : "bg-(--purple-soft-bg) text-(--purple-soft-text)"
+                                                        }
+                          `}
+                                                >
                                                     {item.tag}
                                                 </span>
                                             </div>
                                         )}
                                     </div>
 
-                                    {/* RIGHT */}
                                     {isExpanded && (
                                         <div className="p-6 flex flex-col justify-between">
                                             <div>
-                                                <div className="border rounded-xl p-4 mb-4 hover:border-[var(--royal-blue)] hover:shadow-md transition-colors">
-                                                    <h2 className="text-2xl font-semibold mb-2">Musical Concert</h2>
-                                                    <p className="text-sm"><b>Month:</b> {item.month}</p>
-                                                    <p className="text-sm"><b>Location:</b> {item.location}</p>
+                                                <div className="border rounded-xl p-4 mb-4 hover:border-(--royal-blue) hover:shadow-md transition-colors">
+                                                    <h2 className="text-2xl font-semibold mb-2">
+                                                        Musical Concert
+                                                    </h2>
+                                                    <p className="text-sm">
+                                                        <b>Month:</b> {item.month}
+                                                    </p>
+                                                    <p className="text-sm">
+                                                        <b>Location:</b> {item.location}
+                                                    </p>
                                                 </div>
 
-                                                <div className="bg-linear-to-br from-[var(--blue-100)] to-[var(--blue-50)] rounded-xl p-6 text-center mb-6 hover:shadow-lg transition-shadow">
-                                                    <p className="text-4xl font-bold text-[var(--royal-blue)]">
+                                                <div className="bg-linear-to-br from-(--blue-100) to-(--blue-50) rounded-xl p-6 text-center mb-6 hover:shadow-lg transition-shadow">
+                                                    <p className="text-4xl font-bold text-(--royal-blue)">
                                                         {item.interest}
                                                     </p>
-                                                    <p className="text-sm text-[var(--gray-600)] mt-1">
+                                                    <p className="text-sm text-(--gray-600) mt-1">
                                                         Interest So Far
                                                     </p>
                                                 </div>
                                             </div>
 
                                             <Button
-                                                className="rounded-full bg-[var(--navy-900)] h-12 hover:bg-[var(--navy-800)] hover:shadow-xl transition-all"
+                                                className="rounded-full bg-(--navy-900) h-12 hover:bg-(--navy-800) hover:shadow-xl transition-all"
                                                 onClick={(e) => handleHostEvent(e, item)}
                                             >
                                                 Host the Event
@@ -244,11 +274,12 @@ export function ArtistRequestsCarousel() {
                                         </div>
                                     )}
 
-                                    {/* ABOUT */}
                                     {isExpanded && (
                                         <div className="col-span-2 px-6 pb-6">
-                                            <h4 className="font-semibold text-lg mb-1">About the Event</h4>
-                                            <p className="text-sm text-[var(--gray-600)] leading-relaxed">
+                                            <h4 className="font-semibold text-lg mb-1">
+                                                About the Event
+                                            </h4>
+                                            <p className="text-sm text-(--gray-600) leading-relaxed">
                                                 {item.about}
                                             </p>
                                         </div>

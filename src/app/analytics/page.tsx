@@ -11,14 +11,20 @@ import { ApprovedStallsSection } from "@/components/analytics/approved-stalls"
 export default function AnalyticsPage() {
   return (
     <DashboardLayout>
-      <div className="w-full px-0 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="w-full px-0 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
         <EventOverview />
-        <EventStats />
-        <RevenueStats />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
+          <div className="lg:col-span-12">
+            <EventStats />
+          </div>
+          <div className="lg:col-span-12">
+            <RevenueStats />
+          </div>
+        </div>
         <ApprovedStallsSection />
         <DateReviewsSection />
         <EventDetailsDescription />
       </div>
     </DashboardLayout>
-  );
+  )
 }

@@ -13,58 +13,61 @@ interface StallDetailsProps {
 
 export function StallDetails({ title, subtitle, items = [], onClose, onApprove, isApproved, onRevoke }: StallDetailsProps) {
     return (
-        <div className="flex flex-col w-full max-w-[340px] shadow-xl border-2 rounded-[30px] overflow-hidden bg-[var(--stall-details-bg)] border-[var(--stall-details-border)]">
-            {/* Header Section - White Background */}
-            <div className="p-6 pb-4 border-b relative bg-[var(--stall-header-bg)] border-[var(--stall-divider)]">
+        <div className="relative flex flex-col w-full max-w-[340px] max-h-[440px] shadow-xl border-2 rounded-[30px] overflow-hidden bg-(--stall-details-bg) border-(--stall-details-border)">
+            {/* Header Section - Fixed */}
+            <div className="p-6 pb-4 border-b relative bg-(--stall-header-bg) border-(--stall-divider) shrink-0">
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute right-4 top-4 h-8 w-8 hover:bg-transparent text-[var(--stall-close-icon)] hover:text-[var(--stall-close-hover)]"
+                    className="absolute right-4 top-4 h-8 w-8 hover:bg-transparent text-(--stall-close-icon) hover:text-(--stall-close-hover)"
                     onClick={onClose}
                 >
                     <X className="h-5 w-5" />
                 </Button>
-                <h2 className="text-[28px] leading-tight font-bold font-bricolage mb-2 pr-6 text-[var(--stall-title-color)]">
+                <h2 className="text-[28px] leading-tight font-bold font-bricolage mb-2 pr-6 text-(--stall-title-color)">
                     {title}
                 </h2>
-                <p className="text-sm font-poppins text-[var(--stall-subtitle-color)]">{subtitle}</p>
+                <p className="text-sm font-poppins text-(--stall-subtitle-color)">{subtitle}</p>
             </div>
 
-            {/* Body Section - Light Gray Background */}
-            <div className="p-4 space-y-3">
-                <div className="space-y-3 mb-6">
+            {/* Scrollable Items Section */}
+            <div className="p-4 overflow-y-auto flex-1 min-h-0">
+                <div className="space-y-3">
                     {items.map((item, index) => (
                         <div
                             key={index}
-                            className="flex justify-between items-center border rounded-[15px] px-5 py-3 bg-white border-[var(--stall-item-border)]"
+                            className="flex justify-between items-center border rounded-[15px] px-5 py-3 bg-white border-(--stall-item-border)"
                         >
-                            <span className="font-medium font-poppins text-sm text-[var(--stall-item-text)]">
+                            <span className="font-medium font-poppins text-sm text-(--stall-item-text)">
                                 {item.name}
                             </span>
-                            <span className="font-semibold text-xl font-poppins text-[var(--stall-price-color)]">
+                            <span className="font-semibold text-xl font-poppins text-(--stall-price-color)">
                                 ₹{item.price}
                             </span>
                         </div>
                     ))}
                 </div>
+            </div>
 
-                <div className="flex gap-4 pt-2 pb-2">
+            <div className="p-4 pt-0 shrink-0 bg-(--stall-details-bg)">
+                <div className="flex gap-4">
                     <Button
-                        onClick={onClose}
-                        className="flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm border-none shadow-none text-[var(--stall-deny-text)] bg-[var(--stall-deny-bg)] hover:bg-[var(--stall-deny-hover-bg)]"
+                        onClick={() => {
+                            if (isApproved) {
+                                onRevoke?.()
+                            } else {
+                                onRevoke?.()
+                            }
+                        }}
+                        className="flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm border-none shadow-none text-(--stall-deny-text) bg-(--stall-deny-bg) hover:bg-(--stall-deny-hover-bg)"
                     >
-                        {isApproved ? "Close" : "Deny"}
+                        Deny
                     </Button>
-
                     <Button
-                        onClick={isApproved ? onRevoke : onApprove}
-                        className={`flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm shadow-none ${
-                            isApproved
-                                ? "text-white bg-[var(--stall-revoke-bg)] hover:bg-[var(--stall-revoke-hover-bg)]"
-                                : "text-white bg-[var(--stall-approve-bg)] hover:bg-[var(--stall-approve-hover-bg)]"
-                        }`}
+                        onClick={onApprove}
+                        className="flex-1 font-bold rounded-[30px] py-6 font-poppins text-sm shadow-none text-white bg-(--stall-approve-bg) hover:bg-(--stall-approve-hover-bg)"
                     >
-                        {isApproved ? "Deny" : "Approve"}
+                        Accept
                     </Button>
                 </div>
             </div>

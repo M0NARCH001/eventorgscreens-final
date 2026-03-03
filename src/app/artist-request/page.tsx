@@ -6,8 +6,10 @@ import { ArtistRequestsCarousel } from "@/components/artist-request/artist-reque
 export default function ArtistRequestsPage() {
     return (
         <DashboardLayout>
-            <div className="max-w-[1600px] mx-auto p-3 md:p-6 space-y-6">
-                <h1 className="text-2xl font-bold text-[#0c1b33]">Artists  Requests in Baatasari</h1>
+            <div className="w-full mx-auto max-w-screen-2xl px-3 sm:px-4 md:px-6 py-3 md:py-6 flex flex-col gap-6">
+                <h1 className="text-2xl font-bold text-(--navy-900)">
+                    Artists Requests in Baatasari
+                </h1>
                 <ArtistRequestsCarousel />
             </div>
         </DashboardLayout>

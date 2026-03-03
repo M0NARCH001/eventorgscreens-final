@@ -17,12 +17,13 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts"
 import { CHART_DATA } from "@/lib/dashboard-data"
 
 interface GradientCursorProps {
-  points?: { x: number }[];
-  height?: number;
+  points?: { x: number }[]
+  height?: number
 }
 
 const GradientCursor = ({ points, height }: GradientCursorProps) => {
@@ -40,8 +41,16 @@ const GradientCursor = ({ points, height }: GradientCursorProps) => {
     <g>
       <defs>
         <linearGradient id="hoverGradient" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0%" stopColor="var(--color-primary)" stopOpacity="0.18" />
-          <stop offset="50%" stopColor="var(--color-primary)" stopOpacity="0.10" />
+          <stop
+            offset="0%"
+            stopColor="var(--color-primary)"
+            stopOpacity="0.18"
+          />
+          <stop
+            offset="50%"
+            stopColor="var(--color-primary)"
+            stopOpacity="0.10"
+          />
           <stop offset="100%" stopColor="var(--color-primary)" stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -64,31 +73,30 @@ export function AnalyticsChart() {
 
   const getChartData = () => {
     switch (period) {
-      case "weekly": return CHART_DATA.weekly;
-      case "yearly": return CHART_DATA.yearly;
-      default: return CHART_DATA.monthly;
+      case "weekly":
+        return CHART_DATA.weekly
+      case "yearly":
+        return CHART_DATA.yearly
+      default:
+        return CHART_DATA.monthly
     }
   }
 
-  const data = getChartData();
-  const dataKey = metric === "tickets" ? "tickets" : "revenue";
-  const labelKey = "label";
+  const data = getChartData()
+  const dataKey = metric === "tickets" ? "tickets" : "revenue"
+  const labelKey = "label"
 
   return (
-    <Card>
+    <Card className="w-full">
       <CardContent className="p-6">
         <div className="analytics-header">
-          <h2 className="analytics-title">
-            Insights & Analytics
-          </h2>
+          <h2 className="analytics-title">Insights & Analytics</h2>
 
           <div className="analytics-controls">
             <Button
               variant={metric === "tickets" ? "default" : "outline"}
               size="sm"
-              className={`btn-pill-sm ${metric === "tickets"
-                ? "btn-pill-active"
-                : "btn-pill-inactive"
+              className={`btn-pill-sm ${metric === "tickets" ? "btn-pill-active" : "btn-pill-inactive"
                 }`}
               onClick={() => setMetric("tickets")}
             >
@@ -98,9 +106,7 @@ export function AnalyticsChart() {
             <Button
               variant={metric === "revenue" ? "default" : "outline"}
               size="sm"
-              className={`btn-pill-sm ${metric === "revenue"
-                ? "btn-pill-active"
-                : "btn-pill-inactive"
+              className={`btn-pill-sm ${metric === "revenue" ? "btn-pill-active" : "btn-pill-inactive"
                 }`}
               onClick={() => setMetric("revenue")}
             >
@@ -136,33 +142,62 @@ export function AnalyticsChart() {
         <div className="chart-wrapper">
           <div className="chart-area">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 10, right: 20, left: 20, bottom: 30 }}>
-                
+              <LineChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 30, bottom: 20 }}
+              >
+                <CartesianGrid vertical={false} strokeDasharray="4 4" strokeOpacity={0.2} />
+
                 <XAxis
                   dataKey={labelKey}
                   axisLine={false}
                   tickLine={false}
                   interval={0}
-                  tick={{ fill: "var(--color-muted-foreground)", fontSize: 12 }}
+                  tick={{
+                    fill: "var(--color-muted-foreground)",
+                    fontSize: 12,
+                  }}
                   dy={10}
+                  label={{
+                    value: period === "yearly" ? "Timeline (Months)" : period === "weekly" ? "Timeline (Days)" : "Timeline (Weeks)",
+                    position: 'insideBottom',
+                    offset: -10,
+                    fill: "var(--color-muted-foreground)",
+                    fontSize: 12
+                  }}
                 />
 
-                <YAxis hide />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{
+                    fill: "var(--color-muted-foreground)",
+                    fontSize: 12,
+                  }}
+                  dx={-10}
+                  tickFormatter={(val) => metric === "revenue" ? `₹${val}` : val}
+                  label={{
+                    value: metric === "revenue" ? "Revenue (₹)" : "Registrations",
+                    angle: -90,
+                    position: 'insideLeft',
+                    offset: -15,
+                    fill: "var(--color-muted-foreground)",
+                    fontSize: 12
+                  }}
+                />
 
                 <Tooltip
                   cursor={<GradientCursor />}
                   content={({ active, payload, label }) => {
                     if (active && payload && payload.length) {
-                      const val = payload[0].value as number;
-                      const displayVal = metric === "revenue" ? `₹${val * 1000}` : val.toString();
+                      const val = payload[0].value as number
+                      const displayVal =
+                        metric === "revenue" ? `₹${val * 1000}` : val.toString()
+
                       return (
                         <div className="chart-tooltip">
-                          <p className="chart-tooltip-label">
-                            {label}
-                          </p>
-                          <p className="chart-tooltip-value">
-                            {displayVal}
-                          </p>
+                          <p className="chart-tooltip-label">{label}</p>
+                          <p className="chart-tooltip-value">{displayVal}</p>
                         </div>
                       )
                     }

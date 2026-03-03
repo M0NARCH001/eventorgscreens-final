@@ -7,8 +7,7 @@ import { STALLS_DATA } from "@/lib/stalls-data"
 import { useLocalStorage } from "@/hooks/use-local-storage"
 
 export function ApprovedStallsSection() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [approvedStalls, setApprovedStalls, isInitialized] = useLocalStorage<string[]>("approvedStalls", [])
+    const [approvedStalls, , isInitialized] = useLocalStorage<string[]>("approvedStalls", [])
 
     if (!isInitialized) return null
     if (approvedStalls.length === 0) return null

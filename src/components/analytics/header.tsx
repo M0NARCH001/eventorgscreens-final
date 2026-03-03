@@ -1,6 +1,8 @@
 "use client"
 
+import Image from "next/image"
 import { Bell, Plus, Search } from "lucide-react"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,13 +14,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useSidebar } from "@/components/ui/sidebar"
-import Image from "next/image"
 
 export function Header() {
   const { state } = useSidebar()
 
   return (
-    <header className="flex h-16 w-full items-center justify-between border-b border-border bg-background px-4">
+    <header className="w-full flex h-16 items-center justify-between border-b border-border bg-background px-4">
       <div className="flex items-center gap-2">
         {state === "collapsed" && (
           <Image
@@ -33,7 +34,8 @@ export function Header() {
 
       <div className="flex items-center gap-4">
         <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-          <Plus className="mr-2 h-4 w-4" /> Create Event
+          <Plus className="mr-2 h-4 w-4" />
+          Create Event
         </Button>
 
         <div className="flex items-center gap-2">
@@ -58,7 +60,11 @@ export function Header() {
             </Button>
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="w-56 bg-popover border-border" align="end" forceMount>
+          <DropdownMenuContent
+            className="w-56 bg-popover border-border"
+            align="end"
+            forceMount
+          >
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
                 <p className="text-sm font-medium leading-none text-foreground">

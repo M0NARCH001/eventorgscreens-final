@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 interface TimePickerProps {
     initialTime?: string; // Format "HH:MM AM/PM"
@@ -103,10 +103,9 @@ const TimePicker: React.FC<TimePickerProps> = ({
     };
 
     // Styles
-    const primaryColor = "#1e3a8a"; // Dark blue
-    const secondaryColor = "#dbeafe"; // Light blue
-    const bgColor = "#f3f4f6"; // Light gray bg for dialog
-    const clockFaceColor = "#e5e7eb"; // Gray clock face
+    const primaryColor = "var(--blue-900)"; // Dark blue
+    const secondaryColor = "var(--blue-100)"; // Light blue
+    const clockFaceColor = "var(--gray-200)"; // Gray clock face
 
     // Calculate hand rotation
     const handRotation =
@@ -114,8 +113,8 @@ const TimePicker: React.FC<TimePickerProps> = ({
 
     // Render numbers
     const renderNumbers = () => {
-        const numbers = [];
-        const count = view === "hours" ? 12 : 12; // Both views map to 12 positions visually generally, but minutes we might want all 60 or just 5s. 
+        const numbers: React.JSX.Element[] = [];
+        // Both views map to 12 positions visually generally, but minutes we might want all 60 or just 5s.
         // Standard android time picker shows 12 numbers for hours, and 12 numbers (5, 10, 15...) for minutes.
 
         for (let i = 1; i <= 12; i++) {
@@ -127,15 +126,6 @@ const TimePicker: React.FC<TimePickerProps> = ({
             const radius = 100; // Face radius approx 128px, num radius ~100
             const x = 128 + Math.cos(angleRad) * radius;
             const y = 128 + Math.sin(angleRad) * radius;
-
-            const isSelected =
-                view === "hours"
-                    ? timeState.hour === i || (timeState.hour === 12 && i === 12 && val === 0) // rough logic
-                    : timeState.minute === val;
-
-            // Handle 0 vs 60/12 special cases
-            // For hour 12: val is 12. State is 12.
-            // For minute 0: i=12 -> val=0. State is 0. 
 
             // Correct comparison:
             let isMatch = false;
@@ -163,7 +153,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                         fontSize: "16px",
                         fontWeight: 500,
                         pointerEvents: "none", // Let clicks pass through to container
-                        color: isMatch ? "white" : "#374151",
+                        color: isMatch ? "white" : "var(--gray-700)",
                         zIndex: 2,
                     }}
                 >
@@ -202,7 +192,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
             <div
                 style={{
                     width: "320px",
-                    backgroundColor: "#fff",
+                    backgroundColor: "var(--white)",
                     borderRadius: "28px",
                     padding: "24px",
                     display: "flex",
@@ -211,7 +201,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                     boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
                 }}
             >
-                <div style={{ fontSize: "14px", color: "#6b7280", fontWeight: 500 }}>
+                <div style={{ fontSize: "14px", color: "var(--gray-500)", fontWeight: 500 }}>
                     Select time
                 </div>
 
@@ -220,28 +210,28 @@ const TimePicker: React.FC<TimePickerProps> = ({
                     <div
                         onClick={() => setView("hours")}
                         style={{
-                            backgroundColor: view === "hours" ? secondaryColor : "#f3f4f6",
+                            backgroundColor: view === "hours" ? secondaryColor : "var(--gray-100)",
                             padding: "8px 16px",
                             borderRadius: "12px",
                             fontSize: "30px",
                             lineHeight: "1",
-                            color: view === "hours" ? primaryColor : "#1f2937",
+                            color: view === "hours" ? primaryColor : "var(--gray-800)",
                             cursor: "pointer",
                             fontWeight: 300,
                         }}
                     >
                         {timeState.hour.toString().padStart(2, "0")}
                     </div>
-                    <div style={{ fontSize: "30px", lineHeight: "1", color: "#1f2937", marginTop: "-8px" }}>:</div>
+                    <div style={{ fontSize: "30px", lineHeight: "1", color: "var(--gray-800)", marginTop: "-8px" }}>:</div>
                     <div
                         onClick={() => setView("minutes")}
                         style={{
-                            backgroundColor: view === "minutes" ? secondaryColor : "#f3f4f6",
+                            backgroundColor: view === "minutes" ? secondaryColor : "var(--gray-100)",
                             padding: "8px 16px",
                             borderRadius: "12px",
                             fontSize: "30px",
                             lineHeight: "1",
-                            color: view === "minutes" ? primaryColor : "#1f2937",
+                            color: view === "minutes" ? primaryColor : "var(--gray-800)",
                             cursor: "pointer",
                             fontWeight: 300,
                         }}
@@ -254,7 +244,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            border: "1px solid #d1d5db",
+                            border: "1px solid var(--gray-300)",
                             borderRadius: "8px",
                             overflow: "hidden",
                         }}
@@ -264,7 +254,7 @@ const TimePicker: React.FC<TimePickerProps> = ({
                             style={{
                                 padding: "8px 12px",
                                 backgroundColor: timeState.period === "AM" ? primaryColor : "white",
-                                color: timeState.period === "AM" ? "white" : "#374151",
+                                color: timeState.period === "AM" ? "white" : "var(--gray-700)",
                                 fontSize: "14px",
                                 fontWeight: 600,
                                 border: "none",
@@ -273,13 +263,13 @@ const TimePicker: React.FC<TimePickerProps> = ({
                         >
                             AM
                         </button>
-                        <div style={{ height: "1px", backgroundColor: "#d1d5db" }} />
+                        <div style={{ height: "1px", backgroundColor: "var(--gray-300)" }} />
                         <button
                             onClick={() => setTimeState((prev) => ({ ...prev, period: "PM" }))}
                             style={{
                                 padding: "8px 12px",
                                 backgroundColor: timeState.period === "PM" ? primaryColor : "white",
-                                color: timeState.period === "PM" ? "white" : "#374151",
+                                color: timeState.period === "PM" ? "white" : "var(--gray-700)",
                                 fontSize: "14px",
                                 fontWeight: 600,
                                 border: "none",

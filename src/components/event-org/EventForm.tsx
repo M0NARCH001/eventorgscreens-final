@@ -1,30 +1,32 @@
 "use client";
-import React, { useState } from "react";
-import {
-  ChevronUpIcon,
-  ChevronDownIcon,
-  CalendarIcon,
-  ClockIcon,
-  Upload,
-} from "lucide-react";
+
+import React, { useState, useRef, useEffect } from "react";
+import { ChevronUpIcon, ChevronDownIcon, CalendarIcon, ClockIcon, Upload } from "lucide-react";
+import { format } from "date-fns";
+import Image from "next/image";
+
 import { EventFormData } from "./validateEventform";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 import TimePicker from "@/components/ui/TimePicker";
+
+import { cn } from "@/lib/utils";
 import { EVENT_CATEGORIES, TRANSPORT_OPTIONS } from "@/lib/create-event-data";
+
+import styles from "./EventForm.module.css";
 
 interface EventFormProps {
   formData: EventFormData;
   setFormData: React.Dispatch<React.SetStateAction<EventFormData>>;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+  handleInputChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void;
+
   photoPreview: string | null;
+
+  // not used in this snippet but kept in props list in your original
   setPhotoPreview: (preview: string | null) => void;
   photoError: string;
   setPhotoError: (error: string) => void;
@@ -34,11 +36,14 @@ interface EventFormProps {
   setAdditionalPhotoPreviews: (previews: string[]) => void;
   additionalPhotosError: string;
   setAdditionalPhotosError: (error: string) => void;
+
   handleTransportToggle: (transportKey: string) => void;
   addArrayItem: (arrayName: string) => void;
   updateArrayField: (arrayName: string, index: number, field: string, value: string) => void;
+
   openSections: { [key: string]: boolean };
   toggleSection: (section: string) => void;
+
   formErrors: { [key: string]: string };
 }
 
@@ -56,142 +61,111 @@ const EventForm: React.FC<EventFormProps> = ({
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
   const [showEndTimePicker, setShowEndTimePicker] = useState(false);
 
+  // Auto-grow refs
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const personnelRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (descriptionRef.current) {
+      descriptionRef.current.style.height = "auto";
+      descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+    }
+  }, [formData.description]);
+
+  useEffect(() => {
+    if (personnelRef.current) {
+      personnelRef.current.style.height = "auto";
+      personnelRef.current.style.height = `${personnelRef.current.scrollHeight}px`;
+    }
+  }, [formData.personnel]);
+
   const handleTimeUpdate = (field: "time" | "endTime", value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Responsive style for mobile
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 600;
-  const containerWidth = isMobile ? 'auto' : '100%';
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "32px", width: containerWidth }}>
+    <div className={styles.container}>
       {/* Event Information Section */}
-      <div
-        className="event-form-section"
-        style={{
-          width: "100%",
-          backgroundColor: "white",
-          borderRadius: "16px",
-          border: "1px solid #7e7e7e",
-          marginBottom: "32px"
-        }}
-      >
-        <div style={{ width: containerWidth, backgroundColor: "white", borderRadius: "16px", border: "1px solid #7e7e7e" }}>
+      <div className={styles.section}>
+        <div className={styles.sectionInner}>
           <div
             onClick={() => toggleSection("event-info")}
-            style={{
-              padding: "30px 32px",
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              width: "100%",
-              cursor: "pointer"
-            }}
+            className={styles.sectionHeader}
           >
-            <h3 style={{ fontSize: "24px", fontWeight: 500, color: "black" }}>
-              Event Information
-            </h3>
+            <h3 className={styles.sectionTitle}>Event Information</h3>
             {openSections["event-info"] ? (
-              <ChevronUpIcon style={{ width: "24px", height: "24px" }} />
+              <ChevronUpIcon className={styles.chevron} />
             ) : (
-              <ChevronDownIcon style={{ width: "24px", height: "24px" }} />
+              <ChevronDownIcon className={styles.chevron} />
             )}
           </div>
+
           {openSections["event-info"] && (
-            <div style={{ padding: "0 32px 32px" }}>
-              <div className="form-row" style={{ display: "flex", alignItems: "flex-start", gap: "40px", width: "100%", flexWrap: "wrap" }}>
-                <div style={{ display: "flex", flexDirection: "column", width: isMobile ? "100%" : "258px", minWidth: "200px", flex: isMobile ? "1 1 100%" : "1 1 258px", maxWidth: "100%" }}>
-                  <label htmlFor="eventPhoto" style={{ cursor: "pointer", display: "block", width: "100%" }}>
-                    <div style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      height: isMobile ? "auto" : "388px",
-                      minHeight: isMobile ? "200px" : "388px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: "13px",
-                      padding: "20px 24px",
-                      backgroundColor: "white",
-                      borderRadius: "12px",
-                      border: "1px dashed #b5b5b5",
-                      width: "100%"
-                    }}>
+            <div className={styles.sectionBody}>
+              <div className={cn(styles.row, styles.rowGap40, styles.alignStart)}>
+                {/* Photo */}
+                <div className={styles.photoCol}>
+                  <label htmlFor="eventPhoto" className={styles.photoLabel}>
+                    <div className={styles.photoDrop}>
                       <input
+                        id="eventPhoto"
                         type="file"
                         name="eventPhoto"
                         onChange={handleInputChange}
                         accept="image/jpeg,image/png,image/gif"
-                        style={{ display: "none" }}
-                        id="eventPhoto"
+                        className={styles.hiddenInput}
                       />
+
                       {photoPreview ? (
-                        <img
+                        <Image
                           src={photoPreview}
                           alt="Uploaded event photo preview"
-                          style={{ height: "256px", width: isMobile ? 'auto' : 'auto', objectFit: "contain", maxWidth: "100%" }}
+                          className={styles.photoPreview}
+                          width={240}
+                          height={360}
+                          style={{ objectFit: "cover", borderRadius: "8px" }}
                         />
                       ) : (
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-                          <Upload style={{ width: "24px", height: "24px", color: "#1e1e1e" }} />
-                          <span style={{ fontFamily: "Inter, Helvetica", fontWeight: 400, color: "#1e1e1e", fontSize: "18px" }}>
-                            Upload Image
-                          </span>
+                        <div className={styles.uploadPlaceholder}>
+                          <Upload className={styles.uploadIcon} />
+                          <span className={styles.uploadText}>Upload Image</span>
                         </div>
                       )}
                     </div>
                   </label>
-                  <div style={{ display: "flex", flexDirection: "column", width: "100%", marginTop: "16px", gap: "5px" }}>
-                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#1e1e1e", textAlign: "center" }}>
+
+                  <div className={styles.photoHelp}>
+                    <p className={styles.photoHelpText}>
                       Upload a high-quality image for your event
                     </p>
-                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#1e1e1e", textAlign: "center" }}>
-                      Formats: PNG, JPG, JPEG
-                    </p>
-                    <p style={{ fontSize: "14px", fontWeight: 600, color: "#1e1e1e", textAlign: "center" }}>
-                      Accepted aspect ratio: 4:3
-                    </p>
+                    <p className={styles.photoHelpText}>Formats: PNG, JPG, JPEG</p>
+                    <p className={styles.photoHelpText}>Accepted aspect ratio: 2:3 (Portrait)</p>
                   </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "20px", flex: "1 1 300px", minWidth: "0" }}>
-                  <div className="form-row" style={{ display: "flex", alignItems: "center", gap: "40px", width: "100%", flexWrap: "wrap" }}>
-                    <div style={{ flex: 1, position: "relative" }}>
+
+                {/* Fields */}
+                <div className={cn(styles.col, styles.flexGrow)} style={{ gap: 20 }}>
+                  <div className={cn(styles.row, styles.rowGap40, styles.alignCenter)}>
+                    <div className={cn(styles.field, styles.fieldFlex1)}>
                       <input
-                        style={{
-                          height: "56px",
-                          padding: "4px 16px",
-                          border: "1px solid #79747e",
-                          borderRadius: "4px",
-                          width: "100%",
-                          fontSize: "16px",
-                          color: "#1f2937"
-                        }}
+                        className={styles.input}
                         placeholder="Enter event title"
                         name="eventName"
                         value={formData.eventName}
                         onChange={handleInputChange}
                       />
-                      <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                        Event Name
-                      </span>
+                      <span className={styles.floatingLabel}>Event Name</span>
                       {formErrors.eventName && (
-                        <span style={{ color: "red", fontSize: "12px" }}>{formErrors.eventName}</span>
+                        <span className={styles.error}>{formErrors.eventName}</span>
                       )}
                     </div>
-                    <div style={{ flex: 1, position: "relative" }}>
+
+                    <div className={cn(styles.field, styles.fieldFlex1)}>
                       <select
+                        className={styles.select}
                         name="category"
                         value={formData.category}
                         onChange={handleInputChange}
-                        style={{
-                          height: "56px",
-                          padding: "4px 16px",
-                          border: "1px solid #79747e",
-                          borderRadius: "4px",
-                          width: "100%",
-                          fontSize: "16px",
-                          backgroundColor: "white",
-                          color: "#1f2937"
-                        }}
                       >
                         <option value="">Select the Category</option>
                         {EVENT_CATEGORIES.map((option) => (
@@ -200,81 +174,64 @@ const EventForm: React.FC<EventFormProps> = ({
                           </option>
                         ))}
                       </select>
-                      <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                        Category
-                      </span>
+                      <span className={styles.floatingLabel}>Category</span>
                       {formErrors.category && (
-                        <span style={{ color: "red", fontSize: "12px" }}>{formErrors.category}</span>
+                        <span className={styles.error}>{formErrors.category}</span>
                       )}
                     </div>
                   </div>
-                  <div style={{ width: "100%", position: "relative" }}>
+
+                  <div className={styles.field}>
                     <textarea
-                      style={{
-                        height: "64px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937"
+                      ref={(e) => {
+                        if (e) {
+                          e.style.height = "auto";
+                          e.style.height = `${e.scrollHeight}px`;
+                        }
                       }}
+                      className={cn(styles.textarea, styles.textareaSm)}
                       placeholder='Write a catchy tagline, e.g., "Unleash Your Inner Techie!"'
                       name="tagline"
                       value={formData.tagline}
-                      onChange={handleInputChange}
+                      onChange={(e) => {
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
+                        handleInputChange(e);
+                      }}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Tagline
-                    </span>
+                    <span className={styles.floatingLabel}>Tagline</span>
                     {formErrors.tagline && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.tagline}</span>
+                      <span className={styles.error}>{formErrors.tagline}</span>
                     )}
                   </div>
-                  <div style={{ width: "100%", position: "relative" }}>
-                    <textarea
-                      style={{
-                        height: "144px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937"
-                      }}
+
+                  <div className={styles.field}>
+                    <Textarea
+                      ref={descriptionRef}
+                      className={cn(styles.textarea, styles.textareaMd, "min-h-[144px] overflow-hidden")}
                       placeholder="Describe about the event, including purpose and experience"
                       name="description"
                       value={formData.description}
                       onChange={handleInputChange}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Description
-                    </span>
+                    <span className={styles.floatingLabel}>Description</span>
                     {formErrors.description && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.description}</span>
+                      <span className={styles.error}>{formErrors.description}</span>
                     )}
                   </div>
-                  <div style={{ width: "100%", position: "relative" }}>
-                    <textarea
-                      style={{
-                        height: "64px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937"
-                      }}
+
+                  <div className={styles.field}>
+                    <Textarea
+                      ref={personnelRef}
+                      className={cn(styles.textarea, styles.textareaSm, "min-h-[80px] overflow-hidden")}
                       placeholder="List speakers, MCs, DJs, or any special hosts"
                       name="personnel"
                       value={formData.personnel}
                       onChange={handleInputChange}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Customized Personnel
-                    </span>
+                    <span className={styles.floatingLabel}>Customized Personnel</span>
                     {formErrors.personnel && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.personnel}</span>
+                      <span className={styles.error}>{formErrors.personnel}</span>
                     )}
                   </div>
                 </div>
@@ -283,118 +240,83 @@ const EventForm: React.FC<EventFormProps> = ({
           )}
         </div>
       </div>
+
       {/* Date & Time Section */}
-      <div
-        className="event-form-section"
-        style={{
-          width: "100%",
-          backgroundColor: "white",
-          borderRadius: "16px",
-          border: "1px solid #7e7e7e",
-          marginBottom: "32px"
-        }}
-      >
-        <div style={{ width: containerWidth, backgroundColor: "white", borderRadius: "16px", border: "1px solid #7e7e7e" }}>
+      <div className={styles.section}>
+        <div className={styles.sectionInner}>
           <div
             onClick={() => toggleSection("date-time")}
-            style={{
-              padding: "30px 32px",
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              width: "100%",
-              cursor: "pointer"
-            }}
+            className={styles.sectionHeader}
           >
-            <h3 style={{ fontSize: "24px", fontWeight: 500, color: "black" }}>
-              Date & Time
-            </h3>
+            <h3 className={styles.sectionTitle}>Date &amp; Time</h3>
             {openSections["date-time"] ? (
-              <ChevronUpIcon style={{ width: "24px", height: "24px" }} />
+              <ChevronUpIcon className={styles.chevron} />
             ) : (
-              <ChevronDownIcon style={{ width: "24px", height: "24px" }} />
+              <ChevronDownIcon className={styles.chevron} />
             )}
           </div>
+
           {openSections["date-time"] && (
-            <div style={{ padding: "0 32px 32px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-                {/* Date, Start Time, End Time Row */}
-                {/* Date, Start Time, End Time Row */}
-                <div className="form-row" style={{ display: "flex", alignItems: "flex-start", gap: "16px", width: "100%", flexWrap: "wrap" }}>
-                  <div style={{ flex: "1 1 200px", position: "relative", minWidth: "150px" }}>
+            <div className={styles.sectionBody}>
+              <div className={styles.col} style={{ gap: 24 }}>
+                {/* Date + start time + end time */}
+                <div className={cn(styles.row, styles.rowGap16, styles.alignStart)}>
+                  {/* Date */}
+                  <div className={cn(styles.field, styles.fieldMin150)} style={{ flex: "1 1 200px" }}>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "w-full justify-start text-left font-normal",
-                            !formData.date && "text-muted-foreground"
+                            styles.dateButton,
+                            formData.date ? styles.dateButtonActive : styles.dateButtonMuted
                           )}
-                          style={{
-                            height: "56px",
-                            padding: "4px 16px",
-                            border: "1px solid #79747e",
-                            borderRadius: "4px",
-                            fontSize: "16px",
-                            color: formData.date ? "#1f2937" : "#79747e",
-                            backgroundColor: "transparent",
-                          }}
                         >
-                          {formData.date ? format(new Date(formData.date), "PPP") : <span>Pick a date</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" style={{ position: "absolute", right: "16px", top: "16px", width: "24px", height: "24px", color: "gray" }} />
+                          {formData.date ? (
+                            format(new Date(formData.date), "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className={styles.calendarIcon} />
                         </Button>
                       </PopoverTrigger>
+
                       <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
                           selected={formData.date ? new Date(formData.date) : undefined}
                           onSelect={(date) => {
                             if (date) {
-                              // Ensure we format it as YYYY-MM-DD for the form state
                               const formatted = format(date, "yyyy-MM-dd");
-                              // Mock event object to reuse existing handler if needed, or update directly
-                              // Since handleInputChange expects an event, checking if we can update directly.
-                              // setFormData is available.
-                              setFormData(prev => ({ ...prev, date: formatted }));
+                              setFormData((prev) => ({ ...prev, date: formatted }));
                             }
                           }}
+                          fromDate={new Date()}
+                          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                           initialFocus
                         />
                       </PopoverContent>
                     </Popover>
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px", zIndex: 10 }}>
-                      Start Date
-                    </span>
-                    {formErrors.date && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.date}</span>
-                    )}
+
+                    <span className={styles.floatingLabel}>Start Date</span>
+                    {formErrors.date && <span className={styles.error}>{formErrors.date}</span>}
                   </div>
 
-                  <div style={{ flex: "1 1 200px", position: "relative", minWidth: "150px" }}>
+                  {/* Start time */}
+                  <div className={cn(styles.field, styles.fieldMin150)} style={{ flex: "1 1 200px" }}>
                     <input
                       type="text"
                       readOnly
-                      style={{
-                        height: "56px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937",
-                        cursor: "pointer"
-                      }}
+                      className={styles.input}
                       value={formData.time || ""}
                       onClick={() => setShowStartTimePicker(true)}
                       placeholder="HH:MM AM/PM"
+                      style={{ cursor: "pointer" }}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Start Time
-                    </span>
-                    <ClockIcon style={{ position: "absolute", right: "16px", top: "16px", color: "gray", width: "24px", height: "24px", pointerEvents: "none" }} />
-                    {formErrors.time && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.time}</span>
-                    )}
+                    <span className={styles.floatingLabel}>Start Time</span>
+                    <ClockIcon className={styles.clockIcon} />
+                    {formErrors.time && <span className={styles.error}>{formErrors.time}</span>}
+
                     {showStartTimePicker && (
                       <TimePicker
                         initialTime={formData.time}
@@ -403,31 +325,24 @@ const EventForm: React.FC<EventFormProps> = ({
                       />
                     )}
                   </div>
-                  <div style={{ flex: "1 1 200px", position: "relative", minWidth: "150px" }}>
+
+                  {/* End time */}
+                  <div className={cn(styles.field, styles.fieldMin150)} style={{ flex: "1 1 200px" }}>
                     <input
                       type="text"
                       readOnly
-                      style={{
-                        height: "56px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937",
-                        cursor: "pointer"
-                      }}
+                      className={styles.input}
                       value={formData.endTime || ""}
                       onClick={() => setShowEndTimePicker(true)}
                       placeholder="HH:MM AM/PM"
+                      style={{ cursor: "pointer" }}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      End Time
-                    </span>
-                    <ClockIcon style={{ position: "absolute", right: "16px", top: "16px", color: "gray", width: "24px", height: "24px", pointerEvents: "none" }} />
+                    <span className={styles.floatingLabel}>End Time</span>
+                    <ClockIcon className={styles.clockIcon} />
                     {formErrors.endTime && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.endTime}</span>
+                      <span className={styles.error}>{formErrors.endTime}</span>
                     )}
+
                     {showEndTimePicker && (
                       <TimePicker
                         initialTime={formData.endTime}
@@ -437,133 +352,94 @@ const EventForm: React.FC<EventFormProps> = ({
                     )}
                   </div>
                 </div>
-                <div style={{ height: "24px" }}></div> {/* Line break */}
-                {/* Venue, Google Maps URL Row */}
-                <div className="form-row" style={{ display: "flex", alignItems: "flex-start", gap: "40px", width: "100%", flexWrap: "wrap" }}>
-                  <div style={{ flex: "1 1 250px", position: "relative", minWidth: "250px" }}>
+
+                <div className={styles.break24} />
+
+                {/* Venue + Maps */}
+                <div className={cn(styles.row, styles.rowGap40, styles.alignStart)}>
+                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
                     <input
-                      style={{
-                        height: "56px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937"
-                      }}
+                      className={styles.input}
                       placeholder="Enter the full address or venue name"
                       name="venue"
                       value={formData.venue}
                       onChange={handleInputChange}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Venue
-                    </span>
-                    {formErrors.venue && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.venue}</span>
-                    )}
+                    <span className={styles.floatingLabel}>Venue</span>
+                    {formErrors.venue && <span className={styles.error}>{formErrors.venue}</span>}
                   </div>
-                  <div style={{ flex: "1 1 250px", position: "relative", minWidth: "250px" }}>
+
+                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
                     <input
-                      style={{
-                        height: "56px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937"
-                      }}
+                      className={styles.input}
                       placeholder="Enter the Google Maps link of the venue"
                       name="googleMapsUrl"
                       value={formData.googleMapsUrl}
                       onChange={handleInputChange}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Google Maps URL
-                    </span>
+                    <span className={styles.floatingLabel}>Google Maps URL</span>
                     {formErrors.googleMapsUrl && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.googleMapsUrl}</span>
+                      <span className={styles.error}>{formErrors.googleMapsUrl}</span>
                     )}
                   </div>
                 </div>
-                <div style={{ height: "24px" }}></div> {/* Line break */}
-                {/* Transport to Event, Entry Side Row */}
-                <div className="form-row" style={{ display: "flex", alignItems: "flex-start", gap: "40px", width: "100%", flexWrap: "wrap" }}>
-                  {/* Transport to Event input */}
-                  <div style={{ flex: "1 1 250px", position: "relative", minWidth: "250px" }}>
+
+                <div className={styles.break24} />
+
+                {/* Transport to Event + Entry Side */}
+                <div className={cn(styles.row, styles.rowGap40, styles.alignStart)}>
+                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
                     <input
-                      style={{
-                        height: "56px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937"
-                      }}
+                      className={styles.input}
                       placeholder="Describe how to reach the event"
                       name="transportToEvent"
                       value={formData.transportToEvent || ""}
                       onChange={handleInputChange}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Transport to Event
-                    </span>
+                    <span className={styles.floatingLabel}>Transport to Event</span>
                     {formErrors.transportToEvent && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.transportToEvent}</span>
+                      <span className={styles.error}>{formErrors.transportToEvent}</span>
                     )}
                   </div>
-                  {/* Entry Side input */}
-                  <div style={{ flex: "1 1 250px", position: "relative", minWidth: "250px" }}>
+
+                  <div className={cn(styles.field, styles.fieldMin250)} style={{ flex: "1 1 250px" }}>
                     <input
-                      style={{
-                        height: "56px",
-                        padding: "4px 16px",
-                        border: "1px solid #79747e",
-                        borderRadius: "4px",
-                        width: "100%",
-                        fontSize: "16px",
-                        color: "#1f2937"
-                      }}
+                      className={styles.input}
                       placeholder="Enter Entry Side details"
                       name="entrySide"
                       value={formData.entrySide || ""}
                       onChange={handleInputChange}
                     />
-                    <span style={{ position: "absolute", top: "-12px", left: "-4px", padding: "0 4px", backgroundColor: "white", color: "#79747e", fontSize: "14px" }}>
-                      Entry Side
-                    </span>
+                    <span className={styles.floatingLabel}>Entry Side</span>
                     {formErrors.entrySide && (
-                      <span style={{ color: "red", fontSize: "12px" }}>{formErrors.entrySide}</span>
+                      <span className={styles.error}>{formErrors.entrySide}</span>
                     )}
                   </div>
                 </div>
-                <div style={{ height: "24px" }}></div> {/* Line break */}
-                {/* Transport Availability Subheading and Options */}
+
+                <div className={styles.break24} />
+
+                {/* Transport Availability */}
                 <div>
-                  <span style={{ color: "#79747e", fontSize: "14px", marginBottom: "8px", display: "block", fontWeight: 600 }}>
-                    Transport Availability
-                  </span>
-                  <div className="transport-options" style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-                    {TRANSPORT_OPTIONS.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => handleTransportToggle(option.value)}
-                        style={{
-                          padding: "8px 16px",
-                          borderRadius: "9999px",
-                          fontSize: "12px",
-                          backgroundColor: formData.transportOptions[option.value as keyof typeof formData.transportOptions] ? "#3b82f6" : "white",
-                          color: formData.transportOptions[option.value as keyof typeof formData.transportOptions] ? "white" : "#7e7e7e",
-                          border: "1px solid #7e7e7e",
-                          cursor: "pointer"
-                        }}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
+                  <span className={styles.transportLabel}>Transport Availability</span>
+                  <div className={styles.transportOptions}>
+                    {TRANSPORT_OPTIONS.map((option) => {
+                      const active =
+                        formData.transportOptions[
+                        option.value as keyof typeof formData.transportOptions
+                        ];
+
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => handleTransportToggle(option.value)}
+                          className={cn(styles.chip, active && styles.chipActive)}
+                        >
+                          {option.label}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -571,83 +447,55 @@ const EventForm: React.FC<EventFormProps> = ({
           )}
         </div>
       </div>
+
       {/* Event Highlights Section */}
-      <div
-        className="event-form-section"
-        style={{
-          width: "100%",
-          backgroundColor: "white",
-          borderRadius: "16px",
-          border: "1px solid #7e7e7e",
-          marginBottom: "32px"
-        }}
-      >
-        <div style={{ width: containerWidth, backgroundColor: "white", borderRadius: "16px", border: "1px solid #7e7e7e" }}>
+      <div className={styles.section}>
+        <div className={styles.sectionInner}>
           <div
             onClick={() => toggleSection("event-highlights")}
-            style={{
-              padding: "30px 32px",
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              width: "100%",
-              cursor: "pointer"
-            }}
+            className={styles.sectionHeader}
           >
-            <h3 style={{ fontSize: "24px", fontWeight: 500, color: "black" }}>
-              Event Highlights
-            </h3>
+            <h3 className={styles.sectionTitle}>Event Highlights</h3>
             {openSections["event-highlights"] ? (
-              <ChevronUpIcon style={{ width: "24px", height: "24px" }} />
+              <ChevronUpIcon className={styles.chevron} />
             ) : (
-              <ChevronDownIcon style={{ width: "24px", height: "24px" }} />
+              <ChevronDownIcon className={styles.chevron} />
             )}
           </div>
+
           {openSections["event-highlights"] && (
-            <div style={{ padding: "0 32px 32px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+            <div className={styles.sectionBody}>
+              <div className={styles.col} style={{ gap: 24 }}>
                 <div style={{ width: "100%" }}>
-                  <div style={{ position: "relative" }}>
-                    <span style={{ color: "#79747e", fontSize: "14px", marginBottom: "8px", display: "block" }}>
-                      Add Any Artists Attending the Event
-                    </span>
-                    {formData.artists.map((artist, index) => (
-                      <div key={index} style={{ display: "flex", alignItems: "flex-start", gap: "16px", marginBottom: "12px" }}>
-                        <div style={{ flex: 1 }}>
-                          <input
-                            style={{
-                              height: "56px",
-                              padding: "4px 16px",
-                              border: "1px solid #79747e",
-                              borderRadius: "4px",
-                              width: "100%",
-                              fontSize: "16px",
-                              color: "#1f2937"
-                            }}
-                            placeholder="Artist Name"
-                            value={artist.name}
-                            onChange={(e) => updateArrayField("artists", index, "name", e.target.value)}
-                          />
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <input
-                            style={{
-                              height: "56px",
-                              padding: "4px 16px",
-                              border: "1px solid #79747e",
-                              borderRadius: "4px",
-                              width: "100%",
-                              fontSize: "16px",
-                              color: "#1f2937"
-                            }}
-                            placeholder="Genre of Artist"
-                            value={artist.genre}
-                            onChange={(e) => updateArrayField("artists", index, "genre", e.target.value)}
-                          />
-                        </div>
+                  <span style={{ color: "var(--gray-500)", fontSize: 14, marginBottom: 8, display: "block" }}>
+                    Add Any Artists Attending the Event
+                  </span>
+
+                  {formData.artists.map((artist, index) => (
+                    <div key={index} className={styles.artistRow}>
+                      <div style={{ flex: 1 }}>
+                        <input
+                          className={styles.input}
+                          placeholder="Artist Name"
+                          value={artist.name}
+                          onChange={(e) =>
+                            updateArrayField("artists", index, "name", e.target.value)
+                          }
+                        />
                       </div>
-                    ))}
-                  </div>
+
+                      <div style={{ flex: 1 }}>
+                        <input
+                          className={styles.input}
+                          placeholder="Genre of Artist"
+                          value={artist.genre}
+                          onChange={(e) =>
+                            updateArrayField("artists", index, "genre", e.target.value)
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

@@ -4,7 +4,11 @@ import * as React from "react"
 import { Bar, BarChart, Pie, PieChart, XAxis, YAxis } from "recharts"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart"
 
 import {
   REGISTERED_DATA,
@@ -26,15 +30,23 @@ function CancelledGauge({ value }: { value: number }) {
   const arcPath = `M${startX} ${y} A${radius} ${radius} 0 0 1 ${endX} ${y}`
 
   return (
-    <svg width="100%" height="100%" viewBox="0 0 120 60" preserveAspectRatio="xMidYMid meet">
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 120 60"
+      preserveAspectRatio="xMidYMid meet"
+    >
       <defs>
         <linearGradient id="cancelGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="var(--color-destructive)" stopOpacity="0.7" />
+          <stop
+            offset="0%"
+            stopColor="var(--color-destructive)"
+            stopOpacity="0.7"
+          />
           <stop offset="100%" stopColor="var(--color-destructive)" />
         </linearGradient>
       </defs>
 
-      {/* Track */}
       <path
         d={arcPath}
         fill="none"
@@ -43,7 +55,6 @@ function CancelledGauge({ value }: { value: number }) {
         strokeLinecap="round"
       />
 
-      {/* Active Arc */}
       <path
         d={arcPath}
         fill="none"
@@ -60,10 +71,7 @@ function CancelledGauge({ value }: { value: number }) {
 export function EventStats() {
   return (
     <div className="w-full">
-
-      <div className="grid gap-6 w-full max-w-5xl mx-auto grid-cols-1 md:grid-cols-3">
-
-        {/* Card 1 */}
+      <div className="w-full grid gap-6 grid-cols-1 md:grid-cols-3">
         <Card className="flex flex-col">
           <CardHeader className="items-center pb-2 text-center">
             <CardTitle className="text-lg font-medium text-foreground">
@@ -89,20 +97,32 @@ export function EventStats() {
             </div>
 
             <ChartContainer config={REGISTERED_CONFIG} className="h-[50px] w-full">
-              <BarChart data={REGISTERED_DATA} layout="vertical" margin={{ left: 0, right: 0, top: 0, bottom: 0 }} barSize={32}>
+              <BarChart
+                data={REGISTERED_DATA}
+                layout="vertical"
+                margin={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                barSize={32}
+              >
                 <XAxis type="number" hide />
                 <YAxis type="category" dataKey="category" hide />
                 <ChartTooltip content={<ChartTooltipContent />} />
-
-                <Bar dataKey="registered" stackId="a" fill="var(--color-chart-1)" radius={[20, 0, 0, 20]} />
-                <Bar dataKey="available" stackId="a" fill="var(--color-chart-2)" radius={[0, 20, 20, 0]} />
+                <Bar
+                  dataKey="registered"
+                  stackId="a"
+                  fill="var(--color-chart-1)"
+                  radius={[20, 0, 0, 20]}
+                />
+                <Bar
+                  dataKey="available"
+                  stackId="a"
+                  fill="var(--color-chart-2)"
+                  radius={[0, 20, 20, 0]}
+                />
               </BarChart>
             </ChartContainer>
-
           </CardContent>
         </Card>
 
-        {/* Card 2 */}
         <Card className="flex flex-col">
           <CardHeader className="items-center pb-2 text-center">
             <CardTitle className="text-lg font-medium text-foreground">
@@ -111,9 +131,15 @@ export function EventStats() {
           </CardHeader>
 
           <CardContent className="flex flex-1 flex-col items-center justify-center">
-            <ChartContainer config={DEMOGRAPHICS_CONFIG} className="mx-auto max-h-[140px] w-full">
+            <ChartContainer
+              config={DEMOGRAPHICS_CONFIG}
+              className="mx-auto max-h-[140px] w-full"
+            >
               <PieChart>
-                <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent hideLabel />}
+                />
                 <Pie
                   data={DEMOGRAPHICS_DATA}
                   dataKey="visitors"
@@ -136,11 +162,9 @@ export function EventStats() {
                 <span className="h-2 w-2 rounded bg-muted"></span> Other
               </div>
             </div>
-
           </CardContent>
         </Card>
 
-        {/* Card 3 */}
         <Card className="flex flex-col">
           <CardHeader className="items-center pb-2 text-center">
             <CardTitle className="text-lg font-medium text-foreground">
@@ -149,7 +173,7 @@ export function EventStats() {
           </CardHeader>
 
           <CardContent className="flex flex-1 items-center justify-center gap-5 text-center">
-            <div className="flex h-[75px] w-[150px] sm:h-[85px] sm:w-[170px] md:h-[80px] md:w-[160px] justify-center items-center">
+            <div className="flex justify-center items-center w-full max-w-[170px] h-[85px]">
               <CancelledGauge value={CANCELLED_VALUE} />
             </div>
 
@@ -157,9 +181,7 @@ export function EventStats() {
               {CANCELLED_VALUE}% Cancelled
             </span>
           </CardContent>
-
         </Card>
-
       </div>
     </div>
   )

@@ -76,9 +76,23 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   return <style dangerouslySetInnerHTML={{ __html: css }} />
 }
 
+interface TooltipPayloadItem {
+  name?: string
+  value?: string | number
+  dataKey?: string
+}
+
+interface TooltipProps {
+  active?: boolean
+  payload?: TooltipPayloadItem[]
+  className?: string
+  hideLabel?: boolean
+  indicator?: 'line' | 'dot' | 'dashed'
+}
+
 // ---- Tooltip fixed safely ----
-function ChartTooltipContent(props: any) {
-  const { active, payload, className } = props
+function ChartTooltipContent(props: TooltipProps) {
+  const { active, payload, className, hideLabel } = props
   if (!active || !payload || !Array.isArray(payload) || payload.length === 0) return null
 
   return (
@@ -88,13 +102,19 @@ function ChartTooltipContent(props: any) {
         className,
       )}
     >
-      {payload.map((item: any, i: number) => (
+      {payload.map((item: TooltipPayloadItem, i: number) => (
         <div key={i}>
-          {item.name}: {item.value}
+          {hideLabel ? item.value : `${item.name}: ${item.value}`}
         </div>
       ))}
     </div>
   )
+}
+
+interface LegendPayloadItem {
+  dataKey?: string
+  name?: string
+  value?: string | number
 }
 
 // ---- Legend fixed safely ----
@@ -107,7 +127,7 @@ function ChartLegendContent({
 }: {
   className?: string;
   hideIcon?: boolean;
-  payload?: any[];
+  payload?: LegendPayloadItem[];
   verticalAlign?: 'top' | 'bottom';
   nameKey?: string;
 }) {
@@ -123,7 +143,7 @@ function ChartLegendContent({
         className,
       )}
     >
-      {payload.map((item: any, i: number) => {
+      {payload.map((item: LegendPayloadItem, i: number) => {
         const key = nameKey || item?.dataKey || item?.name || 'value'
         const itemConfig = config[key]
 
