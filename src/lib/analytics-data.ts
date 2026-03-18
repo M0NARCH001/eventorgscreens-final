@@ -6,15 +6,15 @@ import { ChartConfig } from "@/components/ui/chart"
 export const REGISTERED_DATA = [{ category: "total", registered: 375, available: 25 }]
 
 export const REGISTERED_CONFIG = {
-    registered: { label: "Registered", color: "hsl(230, 60%, 65%)" },
-    available: { label: "Available", color: "hsl(100, 70%, 65%)" }
+    registered: { label: "Registered", color: "var(--analytics-registered-color)" },
+    available: { label: "Available", color: "var(--analytics-available-color)" }
 } satisfies ChartConfig
 
 // Chart 2: Demographics
 export const DEMOGRAPHICS_DATA = [
-    { type: "Male", visitors: 50, fill: "hsl(210, 90%, 75%)" },
-    { type: "Female", visitors: 30, fill: "hsl(340, 80%, 75%)" },
-    { type: "Other", visitors: 10, fill: "hsl(0, 0%, 75%)" },
+    { type: "Male", visitors: 50, fill: "var(--analytics-male-color)" },
+    { type: "Female", visitors: 30, fill: "var(--analytics-female-color)" },
+    { type: "Other", visitors: 10, fill: "var(--analytics-other-color)" },
 ]
 
 export const DEMOGRAPHICS_CONFIG = {
@@ -89,22 +89,22 @@ export const TICKETS_BY_DATE_DATA = [
 export const REVENUE_CHART_CONFIG = {
     revenue: {
         label: "Total Revenue",
-        color: "hsl(215, 60%, 45%)", // Dark blueish
+        color: "var(--analytics-revenue-color)",
     },
     addOns: {
         label: "Add-Ons Revenue",
-        color: "hsl(142, 60%, 45%)", // Greenish
+        color: "var(--analytics-addons-color)",
     },
 } satisfies ChartConfig
 
 export const TICKETS_CHART_CONFIG = {
-    vip: { label: "VIP", color: "hsl(280, 60%, 65%)" },
-    regular: { label: "Regular", color: "hsl(215, 60%, 45%)" },
-    child: { label: "Child", color: "hsl(340, 60%, 65%)" },
-    family: { label: "Family", color: "hsl(32, 80%, 55%)" },
+    vip: { label: "VIP", color: "var(--analytics-vip-color)" },
+    regular: { label: "Regular", color: "var(--analytics-revenue-color)" },
+    child: { label: "Child", color: "var(--analytics-child-color)" },
+    family: { label: "Family", color: "var(--analytics-family-color)" },
 } satisfies ChartConfig
 
 export const RADIAL_DATA = [
-    { name: "Booked", value: 79, fill: "hsl(215, 60%, 50%)" },
+    { name: "Booked", value: 79, fill: "var(--analytics-booked-color)" },
     { name: "Remaining", value: 21, fill: "transparent" }
 ]

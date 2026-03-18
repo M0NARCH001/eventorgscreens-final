@@ -185,8 +185,33 @@
      ========================= */
   --artist-card-bg: #ffffff;
   --artist-card-border: #f3f4f6;
-  --artist-name-color: #0f172a;
-  --artist-role-color: #64748b;
+  --artist-name-color: #162d57;
+  --artist-role-color: #9ba8bd;
+  --artist-summary-color: #70829f;
+  --artist-meta-icon: #7c8ea9;
+  --artist-badge-bg: rgba(22, 45, 87, 0.8);
+  --artist-button-bg: #162d57;
+  --artist-button-hover-bg: #122447;
+  --artist-button-disabled-bg: #8799b7;
+  --artist-card-shadow: rgba(15, 31, 61, 0.1);
+  --artist-card-hover-shadow: rgba(15, 31, 61, 0.14);
+  --artist-thumbnail-shadow: rgba(15, 31, 61, 0.18);
+  --artist-hero-overlay-start: rgba(15, 31, 61, 0.02);
+  --artist-hero-overlay-mid: rgba(15, 31, 61, 0.28);
+  --artist-hero-overlay-end: rgba(15, 31, 61, 0.82);
+  --artist-modal-button-shadow: rgba(22, 45, 87, 0.28);
+  --artist-modal-text: #7384a1;
+  --artist-modal-section-label: #6f82a3;
+  --artist-modal-section-icon: #4d6b9a;
+  --artist-contact-surface: #fbfcff;
+  --artist-contact-border: #eef2f8;
+  --artist-contact-hover-border: #dce6f3;
+  --artist-contact-shadow: rgba(15, 31, 61, 0.04);
+  --artist-contact-icon-bg: #ffffff;
+  --artist-contact-icon-color: #5b6e8b;
+  --artist-contact-icon-shadow: rgba(15, 31, 61, 0.08);
+  --artist-contact-label: #95a4bd;
+  --artist-contact-text: #526684;
 
   /* =========================
      9) Feature tokens: Stalls
@@ -194,15 +219,20 @@
   --stall-card-bg: #ffffff;
   --stall-card-border: #f3f4f6;
 
-  --stall-title-color: #0f172a;
-  --stall-subtitle-color: #6b7280;
-  --stall-category-color: #64748b;
+  --stall-title-color: #162d57;
+  --stall-subtitle-color: #7384a1;
+  --stall-category-color: #9ba8bd;
+  --stall-meta-icon: #7c8ea9;
+  --stall-badge-bg: rgba(63, 70, 82, 0.88);
+  --stall-card-shadow: rgba(15, 31, 61, 0.1);
+  --stall-card-hover-shadow: rgba(15, 31, 61, 0.14);
 
   --stall-outline-color: #284878;
   --stall-outline-hover-bg: #f8fafc;
 
-  --stall-approve-bg: #274e7d;
-  --stall-approve-hover-bg: #1e3d63;
+  --stall-approve-bg: #162d57;
+  --stall-approve-hover-bg: #122447;
+  --stall-approve-shadow: rgba(22, 45, 87, 0.22);
 
   --stall-approved-bg: #16a34a;
   --stall-approved-hover-bg: #15803d;
@@ -210,21 +240,96 @@
   --stall-details-border: #274e7d;
   --stall-details-bg: #f4f4f5;
   --stall-header-bg: #ffffff;
-  --stall-divider: #e5e7eb;
+  --stall-divider: #eef2f8;
+  --stall-modal-shadow: rgba(15, 31, 61, 0.32);
+  --stall-modal-overlay-start: rgba(15, 33, 66, 0.12);
+  --stall-modal-overlay-mid: rgba(15, 33, 66, 0.55);
+  --stall-modal-overlay-end: rgba(15, 33, 66, 0.94);
+  --stall-badge-highlight: #72b3ff;
+  --stall-thumbnail-border: rgba(255, 255, 255, 0.85);
+  --stall-thumbnail-shadow: rgba(15, 31, 61, 0.28);
+  --stall-section-label: #6f82a3;
+  --stall-section-icon: #4d6b9a;
+  --stall-item-surface: #fbfcff;
+  --stall-item-shadow: rgba(15, 31, 61, 0.04);
 
   --stall-close-icon: #9ca3af;
   --stall-close-hover: #111827;
 
-  --stall-item-border: #274e7d;
-  --stall-item-text: #274e7d;
-  --stall-price-color: #000000;
+  --stall-item-border: #eef2f8;
+  --stall-item-text: #526684;
+  --stall-price-color: #183154;
 
   --stall-deny-bg: #a3a3a3;
   --stall-deny-hover-bg: #8f8f8f;
   --stall-deny-text: #000000;
+  --stall-deny-border: #ffd7d9;
+  --stall-deny-accent: #ff5d67;
+  --stall-accept-shadow: rgba(22, 45, 87, 0.28);
 
   --stall-revoke-bg: #dc2626;
   --stall-revoke-hover-bg: #b91c1c;
+
+  /* =========================
+     10) Feature tokens: Discovery Hub
+     ========================= */
+  --hub-shell-bg: #fbfdff;
+  --hub-shell-bg-muted: #f3f6fb;
+  --hub-shell-border: rgba(255, 255, 255, 0.7);
+  --hub-shell-shadow: rgba(15, 31, 61, 0.1);
+  --hub-shell-skeleton-bg: rgba(255, 255, 255, 0.7);
+  --hub-shell-skeleton-shadow: rgba(15, 31, 61, 0.08);
+  --hub-ornament-blue: #dfe8ff;
+  --hub-ornament-peach: #fbe8de;
+  --hub-nav-border: #e8edf5;
+  --hub-nav-bg: rgba(255, 255, 255, 0.95);
+  --hub-nav-shadow: rgba(15, 31, 61, 0.08);
+  --hub-chip-bg: #f4f7fb;
+  --hub-chip-text: #60708a;
+  --hub-chip-icon: #5a76ab;
+  --hub-tab-active-bg: #162d57;
+  --hub-tab-active-shadow: rgba(22, 45, 87, 0.22);
+  --hub-tab-inactive-bg: #ffffff;
+  --hub-tab-inactive-text: #60708a;
+  --hub-tab-inactive-hover-bg: #f5f7fb;
+  --hub-accent-start: #21406d;
+  --hub-accent-end: #84a4d8;
+  --hub-title-color: #162d57;
+  --hub-body-text: #6f82a3;
+  --hub-meta-text: #9aa8bc;
+  --hub-panel-bg: rgba(255, 255, 255, 0.78);
+  --hub-panel-border: rgba(255, 255, 255, 0.8);
+  --hub-panel-shadow: rgba(15, 31, 61, 0.06);
+  --hub-empty-border: #cfd8e6;
+  --hub-empty-bg: rgba(255, 255, 255, 0.72);
+  --hub-empty-icon-bg: #e8f1ff;
+  --hub-empty-icon-color: #21406d;
+  --hub-empty-shadow: rgba(15, 31, 61, 0.05);
+
+  /* =========================
+     11) Feature tokens: Forms & Analytics
+     ========================= */
+  --form-slider-scale-text: #888888;
+  --form-slider-separator-text: #aaaaaa;
+  --form-dropdown-shadow: rgba(0, 0, 0, 0.12);
+  --artist-request-active-shadow: rgba(0, 0, 0, 0.3);
+  --event-primary-button-shadow-top: rgba(0, 0, 0, 0.1);
+  --event-primary-button-shadow-bottom: rgba(0, 0, 0, 0.06);
+
+  --analytics-date-count: #10b981;
+  --analytics-date-pink-bg: #fee2e2;
+  --analytics-date-yellow-bg: #fef9c3;
+  --analytics-registered-color: hsl(230, 60%, 65%);
+  --analytics-available-color: hsl(100, 70%, 65%);
+  --analytics-male-color: hsl(210, 90%, 75%);
+  --analytics-female-color: hsl(340, 80%, 75%);
+  --analytics-other-color: hsl(0, 0%, 75%);
+  --analytics-revenue-color: hsl(215, 60%, 45%);
+  --analytics-addons-color: hsl(142, 60%, 45%);
+  --analytics-vip-color: hsl(280, 60%, 65%);
+  --analytics-child-color: hsl(340, 60%, 65%);
+  --analytics-family-color: hsl(32, 80%, 55%);
+  --analytics-booked-color: hsl(215, 60%, 50%);
 }
 
 /* =========================
@@ -457,11 +562,11 @@
 }
 
 .analytics-title {
-  @apply text-xl font-bold text-[#284878];
+  @apply text-xl font-bold text-(--upcoming-primary-700);
 }
 
 .analytics-controls {
-  @apply flex flex-wrap items-center gap-2 text-[#3a5f94];
+  @apply flex flex-wrap items-center gap-2 text-(--blue-soft);
 }
 
 .btn-dropdown-trigger {

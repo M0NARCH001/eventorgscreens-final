@@ -524,7 +524,7 @@ const EventPage: React.FC<EventPageProps> = ({
                               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                                 <path
                                   d="M6 10.5L9 13.5L14 8.5"
-                                  stroke="#fff"
+                                  stroke="var(--white)"
                                   strokeWidth="2"
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
@@ -636,7 +636,7 @@ const EventPage: React.FC<EventPageProps> = ({
 
             <button
               onClick={handleNext}
-              className="flex items-center gap-2 py-3 px-8 rounded-full bg-upcoming-primary-900 text-white border-none cursor-pointer text-base font-medium shadow-[0_4px_6px_-1px_rgb(0_0_0/0.1),0_2px_4px_-1px_rgb(0_0_0/0.06)]"
+              className="flex items-center gap-2 py-3 px-8 rounded-full bg-upcoming-primary-900 text-white border-none cursor-pointer text-base font-medium shadow-[0_4px_6px_-1px_var(--event-primary-button-shadow-top),0_2px_4px_-1px_var(--event-primary-button-shadow-bottom)]"
             >
               {currentStep === 4 ? "Submit" : "Proceed"}
               {currentStep !== 4 && <ArrowRightIcon size={20} />}

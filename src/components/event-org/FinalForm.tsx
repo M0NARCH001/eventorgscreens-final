@@ -167,7 +167,7 @@ const FinalForm: React.FC<FinalFormProps> = ({
                                                 background: "var(--card)",
                                                 border: "1px solid var(--gray-300)",
                                                 borderRadius: 8,
-                                                boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                                                boxShadow: "0 4px 16px var(--form-dropdown-shadow)",
                                                 zIndex: 50,
                                                 maxHeight: 220,
                                                 overflowY: "auto",

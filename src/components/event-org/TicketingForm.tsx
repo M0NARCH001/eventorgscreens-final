@@ -88,7 +88,7 @@ const DualThumbSlider: React.FC<DualThumbSliderProps> = ({ min = 0, max = 100, v
 
             {/* Min Thumb */}
             <div
-                className="absolute top-[14px] w-5 h-5 bg-card rounded-full cursor-grab shadow-[0_2px_6px_rgb(0_0_0/0.2)] z-3 transition-all duration-200 border-[3px] border-royal-blue"
+                className="absolute top-[14px] w-5 h-5 bg-card rounded-full cursor-grab shadow-sm z-3 transition-all duration-200 border-[3px] border-royal-blue"
                 style={{ left: minLeft }}
                 onMouseDown={startDrag("min")}
                 onTouchStart={startDrag("min")}
@@ -102,7 +102,7 @@ const DualThumbSlider: React.FC<DualThumbSliderProps> = ({ min = 0, max = 100, v
 
             {/* Max Thumb */}
             <div
-                className="absolute top-[14px] w-5 h-5 bg-card rounded-full cursor-grab shadow-[0_2px_6px_rgb(0_0_0/0.2)] z-3 transition-all duration-200 border-[3px] border-revenue"
+                className="absolute top-[14px] w-5 h-5 bg-card rounded-full cursor-grab shadow-sm z-3 transition-all duration-200 border-[3px] border-revenue"
                 style={{ left: maxLeft }}
                 onMouseDown={startDrag("max")}
                 onTouchStart={startDrag("max")}
@@ -125,7 +125,7 @@ const DualThumbSlider: React.FC<DualThumbSliderProps> = ({ min = 0, max = 100, v
                     right: 0,
                     bottom: -22,
                     fontSize: 11,
-                    color: "#888",
+                    color: "var(--form-slider-scale-text)",
                     userSelect: "none",
                 }}
             >
@@ -811,7 +811,7 @@ const TicketingForm: React.FC<TicketingFormProps> = ({
                                 {/* Min / Max input boxes */}
                                 <div style={{ display: "flex", gap: 16, alignItems: "center", margin: "8px 0 4px" }}>
                                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                                        <label style={{ fontSize: 11, color: "#888", fontWeight: 500 }}>Min</label>
+                                        <label style={{ fontSize: 11, color: "var(--form-slider-scale-text)", fontWeight: 500 }}>Min</label>
                                         <input
                                             type="number"
                                             min={0}
@@ -839,10 +839,10 @@ const TicketingForm: React.FC<TicketingFormProps> = ({
                                         />
                                     </div>
 
-                                    <span style={{ fontSize: 16, color: "#aaa", marginTop: 18 }}>—</span>
+                                    <span style={{ fontSize: 16, color: "var(--form-slider-separator-text)", marginTop: 18 }}>—</span>
 
                                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                                        <label style={{ fontSize: 11, color: "#888", fontWeight: 500 }}>Max</label>
+                                        <label style={{ fontSize: 11, color: "var(--form-slider-scale-text)", fontWeight: 500 }}>Max</label>
                                         <input
                                             type="number"
                                             min={(formData.audienceRange?.min ?? 0) + 10}

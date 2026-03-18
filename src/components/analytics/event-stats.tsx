@@ -106,11 +106,11 @@ export function EventStats() {
             <div className="flex gap-2 w-full">
               <div
                 className="h-4 rounded-full"
-                style={{ backgroundColor: "#7c83db", flex: 375 }}
+                style={{ backgroundColor: "var(--analytics-registered-color)", flex: 375 }}
               />
               <div
                 className="h-4 rounded-full"
-                style={{ backgroundColor: "#a3e635", flex: 25 }}
+                style={{ backgroundColor: "var(--analytics-available-color)", flex: 25 }}
               />
             </div>
           </CardContent>
@@ -146,13 +146,13 @@ export function EventStats() {
 
             <div className="flex justify-center gap-4 pt-4 text-sm font-medium text-muted-foreground">
               <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded" style={{ backgroundColor: "hsl(210, 90%, 75%)" }}></span> Male
+                <span className="h-2 w-2 rounded" style={{ backgroundColor: "var(--analytics-male-color)" }}></span> Male
               </div>
               <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded" style={{ backgroundColor: "hsl(340, 80%, 75%)" }}></span> Female
+                <span className="h-2 w-2 rounded" style={{ backgroundColor: "var(--analytics-female-color)" }}></span> Female
               </div>
               <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded" style={{ backgroundColor: "hsl(0, 0%, 75%)" }}></span> Other
+                <span className="h-2 w-2 rounded" style={{ backgroundColor: "var(--analytics-other-color)" }}></span> Other
               </div>
             </div>
           </CardContent>

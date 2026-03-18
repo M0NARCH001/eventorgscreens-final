@@ -196,7 +196,7 @@ export function ArtistRequestsCarousel() {
                                         }
 
                     ${isActive
-                                            ? "border-2 border-(--navy-900) shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)]"
+                                            ? "border-2 border-(--navy-900) shadow-[0_35px_60px_-15px_var(--artist-request-active-shadow)]"
                                             : "border border-(--gray-200) shadow-xl"
                                         }
                   `}

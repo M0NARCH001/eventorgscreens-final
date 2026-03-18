@@ -1,137 +1,97 @@
-"use client";
+import Image from "next/image"
+import { MapPin, Sparkles } from "lucide-react"
 
-import Image from "next/image";
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Phone, Mail, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 
 interface ArtistCardProps {
-    name: string;
-    role: string;
-    image: string;
-    experience?: string;
-    price?: number;
-    description?: string;
-    phone?: string;
-    email?: string;
+    name: string
+    role: string
+    badge: string
+    summary: string
+    image: string
+    heroImage: string
+    location: string
+    isBooked?: boolean
+    onSelect?: () => void
 }
 
 export function ArtistCard({
     name,
     role,
+    badge,
+    summary,
     image,
-    experience = "5yr",
-    price = 1500,
-    description,
-    phone = "9173865514",
-    email = "baatasari.com",
+    heroImage,
+    location,
+    isBooked = false,
+    onSelect,
 }: ArtistCardProps) {
-    const [showDetail, setShowDetail] = useState(false);
-
     return (
-        <>
-            {/* Simplified Card — just image + name + role */}
-            <Card
-                className="bg-white border border-gray-100 rounded-2xl shadow-sm transition-shadow h-full flex flex-col cursor-pointer overflow-hidden"
-                onClick={() => setShowDetail(true)}
-            >
-                <div className="relative aspect-3/4 w-full bg-slate-100 rounded-t-2xl overflow-hidden">
-                    <Image
-                        src={image || "/placeholder.svg"}
-                        alt={name}
-                        fill
-                        className="object-cover"
-                    />
+        <Card
+            className="group h-full cursor-pointer gap-0 overflow-hidden rounded-[30px] border border-(--hub-shell-border) bg-(--artist-card-bg) p-3 shadow-[0_18px_45px_var(--artist-card-shadow)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_55px_var(--artist-card-hover-shadow)]"
+            onClick={onSelect}
+        >
+            <div className="relative aspect-[1.05] overflow-hidden rounded-[24px]">
+                <Image
+                    src={heroImage || "/placeholder.svg"}
+                    alt={name}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-105"
+                    sizes="(min-width: 1440px) 23vw, (min-width: 1024px) 30vw, (min-width: 640px) 42vw, 92vw"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,var(--artist-hero-overlay-start)_0%,var(--artist-hero-overlay-mid)_52%,var(--artist-hero-overlay-end)_100%)]" />
+                <div className="absolute left-3 top-3 inline-flex items-center rounded-full bg-(--artist-badge-bg) px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.22em] text-white backdrop-blur-md">
+                    {badge}
                 </div>
-                <div className="p-4">
-                    <h4 className="text-base font-bold font-bricolage text-(--upcoming-primary-800) leading-tight">
-                        {name}
-                    </h4>
-                    <p className="text-sm font-medium font-poppins text-gray-500 mt-0.5">
-                        {role}
-                    </p>
-                </div>
-            </Card>
+            </div>
 
-            {/* Detail Modal Overlay */}
-            {showDetail && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 transition-all"
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) setShowDetail(false);
-                    }}
-                >
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[440px] max-h-[90vh] overflow-y-auto relative animate-in fade-in zoom-in-95 duration-200">
-                        {/* Close button */}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-3 top-3 z-10 h-8 w-8 rounded-full bg-white/80"
-                            onClick={() => setShowDetail(false)}
-                        >
-                            <X className="h-4 w-4" />
-                        </Button>
+            <CardContent className="flex flex-1 flex-col px-3 pb-3 pt-0">
+                <div className="-mt-8 flex items-end gap-3">
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-[20px] border-[3px] border-white shadow-[0_12px_32px_var(--artist-thumbnail-shadow)]">
+                        <Image
+                            src={image || "/placeholder-user.jpg"}
+                            alt={name}
+                            fill
+                            className="object-cover"
+                            sizes="64px"
+                        />
+                    </div>
 
-                        {/* Top section: Image + Name/Role/Experience/Price */}
-                        <div className="p-6 pb-4 flex items-start gap-5">
-                            <div className="relative w-28 h-28 rounded-xl overflow-hidden shrink-0">
-                                <Image
-                                    src={image || "/placeholder.svg"}
-                                    alt={name}
-                                    fill
-                                    className="object-cover"
-                                />
-                            </div>
-                            <div className="flex flex-col gap-2 pt-1">
-                                <h3 className="text-2xl font-bold font-bricolage text-(--upcoming-primary-800)">
-                                    {name}
-                                </h3>
-                                <p className="text-base font-medium font-poppins text-gray-500">
-                                    {role}
-                                </p>
-                                <p className="text-sm font-poppins text-gray-700">
-                                    Experience : {experience}
-                                </p>
-                                <span className="inline-flex items-center justify-center border-2 border-gray-800 rounded-full px-5 py-1.5 text-sm font-semibold font-poppins text-gray-900 w-fit">
-                                    Price : {price}
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* Bio */}
-                        <div className="px-6 pb-5">
-                            <p className="text-sm text-gray-600 leading-relaxed font-poppins">
-                                {description || "A talented artist ready to make your event special."}
-                            </p>
-                        </div>
-
-                        {/* Contact buttons */}
-                        <div className="px-6 pb-6 flex gap-3">
-                            <Button
-                                variant="outline"
-                                className="flex-1 h-12 rounded-full border-2 border-gray-800 text-gray-900 font-semibold text-sm"
-                                asChild
-                            >
-                                <a href={`tel:${phone}`}>
-                                    <Phone className="h-4 w-4 mr-2" />
-                                    {phone}
-                                </a>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="flex-1 h-12 rounded-full border-2 border-gray-800 text-gray-900 font-semibold text-sm"
-                                asChild
-                            >
-                                <a href={`mailto:${email}`}>
-                                    <Mail className="h-4 w-4 mr-2" />
-                                    {email}
-                                </a>
-                            </Button>
+                    <div className="pb-1">
+                        <h3 className="text-[1.35rem] leading-tight font-semibold font-bricolage text-(--artist-name-color)">
+                            {name}
+                        </h3>
+                        <div className="mt-1 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--artist-role-color)">
+                            <Sparkles className="h-3.5 w-3.5 text-(--artist-meta-icon)" />
+                            {role}
                         </div>
                     </div>
                 </div>
-            )}
-        </>
-    );
+
+                <p className="mt-4 line-clamp-3 text-sm leading-6 font-medium text-(--artist-summary-color) font-albert">
+                    {summary}
+                </p>
+
+                <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-(--artist-role-color)">
+                    <MapPin className="h-3.5 w-3.5 text-(--artist-meta-icon)" />
+                    {location}
+                </div>
+            </CardContent>
+
+            <CardFooter className="px-3 pb-3 pt-0">
+                <Button
+                    type="button"
+                    className="h-14 w-full rounded-full bg-(--artist-button-bg) text-xs font-semibold uppercase tracking-[0.24em] text-white shadow-[0_16px_35px_var(--artist-modal-button-shadow)] hover:bg-(--artist-button-hover-bg) disabled:bg-(--artist-button-disabled-bg)"
+                    disabled={isBooked}
+                    onClick={(event) => {
+                        event.stopPropagation()
+                        onSelect?.()
+                    }}
+                >
+                    {isBooked ? "Booked" : "View Profile"}
+                </Button>
+            </CardFooter>
+        </Card>
+    )
 }

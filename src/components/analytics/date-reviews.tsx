@@ -174,15 +174,15 @@ export function DateReviewsSection() {
 
                 // Default styles (light gray box, black text) like Day 1, 2, 4 etc.
                 let wrapperClass = "bg-gray-50 text-gray-900"
-                const countColor = "text-[#10b981]" // Small numbers are always green in the image
+                const countColor = "text-(--analytics-date-count)"
 
                 if (data) {
                   if (data.color === "pink") {
-                    wrapperClass = "bg-[#fee2e2] text-gray-900"
+                    wrapperClass = "bg-(--analytics-date-pink-bg) text-gray-900"
                   } else if (data.color === "green") {
-                    wrapperClass = "bg-[#dcfce7] text-gray-900"
+                    wrapperClass = "bg-(--green-100) text-gray-900"
                   } else if (data.color === "yellow") {
-                    wrapperClass = "bg-[#fef9c3] text-gray-900"
+                    wrapperClass = "bg-(--analytics-date-yellow-bg) text-gray-900"
                   }
                 }
 

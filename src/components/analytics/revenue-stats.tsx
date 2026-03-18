@@ -50,7 +50,7 @@ function ClientOnlyPieChart({ radialData }: { radialData: { name: string; value:
         stroke="none"
       >
         <Cell key="cell-0" fill="var(--upcoming-primary-800)" />
-        <Cell key="cell-1" fill="#FFFFFF" />
+        <Cell key="cell-1" fill="var(--white)" />
       </Pie>
     </PieChart>
   )
